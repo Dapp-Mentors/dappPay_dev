@@ -67,38 +67,17 @@ const Footer = () => {
                                     Tutorials
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/blog" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
-                                    Blog
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-lg font-semibold mb-4 text-white">Features</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link href="/features/ai" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
-                                    AI-Powered
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/features/security" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
-                                    Secure & Decentralized
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/features/performance" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
-                                    Lightning Fast
-                                </Link>
-                            </li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
                         <ul className="space-y-2">
+                            <li>
+                                <Link href="/features" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
+                                    AI-Powered
+                                </Link>
+                            </li>
                             <li>
                                 <Link href="/about" className="text-slate-400 hover:text-[#00FFA3] transition-colors duration-300">
                                     About Us
@@ -122,9 +101,6 @@ const Footer = () => {
                     <div className="flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm">
                         <div>© {new Date().getFullYear()} DappPay. All rights reserved.</div>
                         <div className="flex gap-6 mt-4 md:mt-0">
-                            <Link href="/terms" className="hover:text-[#00FFA3] transition-colors duration-300">
-                                Terms of Service
-                            </Link>
                             <Link href="/privacy" className="hover:text-[#00FFA3] transition-colors duration-300">
                                 Privacy Policy
                             </Link>
