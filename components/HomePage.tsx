@@ -5,6 +5,7 @@ import React from 'react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import Header from './Header';
 import { ChevronRight, Sparkles, Shield, Zap } from 'lucide-react';
+import Footer from './Footer';
 
 const HomePage = () => {
     const { setVisible } = useWalletModal();
@@ -18,7 +19,7 @@ const HomePage = () => {
             <Header />
 
             {/* Hero Section */}
-            <main className="pb-20 px-6">
+            <main className="pb-20 px-6 mt-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#DC1FFF]/10 border border-[#DC1FFF]/20 rounded-full mb-6 animate-pulse">
@@ -87,6 +88,9 @@ const HomePage = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };

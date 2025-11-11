@@ -6,6 +6,7 @@ import Header from './Header';
 import { Send, DollarSign, Users, TrendingUp, Plus, Menu, X } from 'lucide-react';
 import { Message, PayrollSummary } from '@/lib/types';
 import { INITIAL_MESSAGES, MOCK_PAYROLLS } from '@/lib/constants';
+import Footer from './Footer';
 
 const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
@@ -48,7 +49,7 @@ const Dashboard = () => {
       <Header />
 
       {/* Main Content */}
-      <main className="pb-6">
+      <main className="pb-6 mt-8">
         <div className="max-w-full h-[calc(100vh-8rem)] flex gap-6">
           {/* Chat Interface - Left Side */}
           <div className={`${isPayrollOpen ? 'w-2/3' : 'w-full'} transition-all duration-300 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm overflow-hidden`}>
@@ -180,6 +181,9 @@ const Dashboard = () => {
           )}
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer />
 
       <style jsx>{`
         @keyframes fadeIn {
