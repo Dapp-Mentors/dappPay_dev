@@ -1,32 +1,35 @@
-import { Wallet, ChevronRight, Sparkles, Shield, Zap } from 'lucide-react';
+// app/components/HomePage.tsx
+"use client"
+
+import React, { useEffect } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import Header from './Header';
+import { ChevronRight, Sparkles, Shield, Zap } from 'lucide-react';
 
 interface HomePageProps {
     onNavigateToDashboard: () => void;
+    onDisconnect: () => void; // New prop for disconnect handling
 }
 
-const HomePage = ({ onNavigateToDashboard }: HomePageProps) => {
+const HomePage = ({ onNavigateToDashboard, onDisconnect }: HomePageProps) => {
+    const { connected } = useWallet();
+
+    // Auto-navigate to dashboard on connect (redundant with Header, but kept for safety)
+    useEffect(() => {
+        if (connected) {
+            onNavigateToDashboard();
+        }
+    }, [connected, onNavigateToDashboard]);
+
     return (
-        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black">
-            {/* Header */}
-            <header className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-[#DC1FFF]/20">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center">
-                            <Zap className="w-6 h-6 text-black" />
-                        </div>
-                        <span className="text-2xl font-bold bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] bg-clip-text text-transparent">
-                            DappPay
-                        </span>
-                    </div>
-                    <button className="px-6 py-2 bg-[#DC1FFF] hover:bg-[#00FFA3] text-black rounded-lg font-medium transition-all duration-200 flex items-center gap-2">
-                        <Wallet className="w-4 h-4" />
-                        Connect Wallet
-                    </button>
-                </div>
-            </header>
+        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20"> {/* Add pt-20 to account for fixed header */}
+            <Header
+                onNavigateToDashboard={onNavigateToDashboard}
+                onDisconnect={onDisconnect}
+            />
 
             {/* Hero Section */}
-            <main className="pt-32 pb-20 px-6">
+            <main className="pb-20 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center max-w-4xl mx-auto mb-16">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#DC1FFF]/10 border border-[#DC1FFF]/20 rounded-full mb-6 animate-pulse">
@@ -44,13 +47,14 @@ const HomePage = ({ onNavigateToDashboard }: HomePageProps) => {
 
                         <p className="text-xl text-slate-400 mb-12 leading-relaxed">
                             Manage your decentralized payroll with natural language.
-                            Just chat with our AI assistant and watch magic happen on-chain.
+                            Just chat with your AI assistant and watch magic happen on-chain.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <button
                                 onClick={onNavigateToDashboard}
-                                className="px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-[#DC1FFF]/50 flex items-center justify-center gap-2"
+                                disabled={connected}
+                                className="px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-[#DC1FFF]/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Launch Dashboard
                                 <ChevronRight className="w-5 h-5" />

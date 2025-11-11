@@ -1,5 +1,9 @@
+// app/components/Dashboard.tsx
+"use client"
+
 import { useState } from 'react';
-import { Send, DollarSign, Users, Menu, X, TrendingUp, Plus, ChevronRight, Zap } from 'lucide-react';
+import Header from './Header';
+import { Send, DollarSign, Users, TrendingUp, Plus, Menu, X } from 'lucide-react';
 import { Message, PayrollSummary } from '@/lib/types';
 import { INITIAL_MESSAGES, MOCK_PAYROLLS } from '@/lib/constants';
 
@@ -44,38 +48,14 @@ const Dashboard = ({ onBack }: DashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black">
-      {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-[#DC1FFF]/20">
-        <div className="max-w-full px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button onClick={onBack} className="text-slate-400 hover:text-white transition-colors">
-              <ChevronRight className="w-6 h-6 rotate-180" />
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-black" /> {/* Assuming Zap is imported; add if missing */}
-              </div>
-              <span className="text-2xl font-bold bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] bg-clip-text text-transparent">
-                DappPay
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700">
-              <span className="text-sm text-slate-400">Connected: </span>
-              <span className="text-sm text-white font-mono">AbC...xYz</span>
-            </div>
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Menu className="w-6 h-6 text-slate-400" />
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20"> {/* Add pt-20 to account for fixed header */}
+      <Header
+        showBackButton={true}
+        onBack={onBack}
+      />
 
       {/* Main Content */}
-      <main className="pt-24 px-6 pb-6">
+      <main className="pb-6">
         <div className="max-w-full h-[calc(100vh-8rem)] flex gap-6">
           {/* Chat Interface - Left Side */}
           <div className={`${isPayrollOpen ? 'w-2/3' : 'w-full'} transition-all duration-300 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm overflow-hidden`}>
