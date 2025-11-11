@@ -1,45 +1,27 @@
 // app/page.tsx
 "use client"
 
-import { useState } from 'react';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useRouter } from 'next/navigation';
 import HomePage from '@/components/HomePage';
-import Dashboard from '@/components/Dashboard';
-import '@solana/wallet-adapter-react-ui/styles.css'; // Required for modal styles
 
-export default function DappPayApp() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'dashboard'>('home');
+export default function Home() {
+  const { connected, connecting } = useWallet();
+  const router = useRouter();
 
-  // Memoize network and endpoint
-  const network = useMemo(() => 'devnet' as const, []);
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  // derive loading state from connecting instead of local state to avoid synchronous setState in effect
+  const isLoading = connecting;
 
-  // Memoize wallets
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  useEffect(() => {
+    if (connected) {
+      router.push('/dashboard');
+    }
+  }, [connected, router]);
 
-  const handleNavigateToDashboard = () => setCurrentPage('dashboard');
-  const handleBackToHome = () => setCurrentPage('home');
+  if (isLoading || connecting) {
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading...</div>;
+  }
 
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <div>
-            {currentPage === 'home' ? (
-              <HomePage
-                onNavigateToDashboard={handleNavigateToDashboard}
-                onDisconnect={handleBackToHome}
-              />
-            ) : (
-              <Dashboard onBack={handleBackToHome} />
-            )}
-          </div>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+  return <HomePage />;
 }

@@ -1,38 +1,13 @@
 // app/components/Header.tsx
 "use client"
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { ChevronRight, Zap, X, Menu } from 'lucide-react';
+import { Zap, X, Menu } from 'lucide-react';
 
-interface HeaderProps {
-    showBackButton?: boolean;
-    onBack?: () => void;
-    onNavigateToDashboard?: () => void;
-    onDisconnect?: () => void;
-}
-
-const Header = ({
-    showBackButton = false,
-    onBack,
-    onNavigateToDashboard,
-    onDisconnect
-}: HeaderProps) => {
+const Header = () => {
     const { connected, publicKey, disconnect } = useWallet();
-
-    // Handle auto-navigation on connect/disconnect
-    useEffect(() => {
-        if (connected && onNavigateToDashboard) {
-            onNavigateToDashboard();
-        }
-    }, [connected, onNavigateToDashboard]);
-
-    useEffect(() => {
-        if (!connected && onDisconnect) {
-            onDisconnect();
-        }
-    }, [connected, onDisconnect]);
 
     const handleDisconnect = async () => {
         if (disconnect) {
@@ -46,11 +21,6 @@ const Header = ({
         <header className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-[#DC1FFF]/20">
             <div className="max-w-full px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    {showBackButton && onBack && (
-                        <button onClick={onBack} className="text-slate-400 hover:text-white transition-colors">
-                            <ChevronRight className="w-6 h-6 rotate-180" />
-                        </button>
-                    )}
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center">
                             <Zap className="w-6 h-6 text-black" />

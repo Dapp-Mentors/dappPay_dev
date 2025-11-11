@@ -7,11 +7,7 @@ import { Send, DollarSign, Users, TrendingUp, Plus, Menu, X } from 'lucide-react
 import { Message, PayrollSummary } from '@/lib/types';
 import { INITIAL_MESSAGES, MOCK_PAYROLLS } from '@/lib/constants';
 
-interface DashboardProps {
-  onBack: () => void;
-}
-
-const Dashboard = ({ onBack }: DashboardProps) => {
+const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [inputValue, setInputValue] = useState('');
   const [isPayrollOpen, setIsPayrollOpen] = useState(true);
@@ -48,11 +44,8 @@ const Dashboard = ({ onBack }: DashboardProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20"> {/* Add pt-20 to account for fixed header */}
-      <Header
-        showBackButton={true}
-        onBack={onBack}
-      />
+    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20">
+      <Header />
 
       {/* Main Content */}
       <main className="pb-6">

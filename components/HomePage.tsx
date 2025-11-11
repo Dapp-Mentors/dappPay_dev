@@ -1,32 +1,21 @@
 // app/components/HomePage.tsx
 "use client"
 
-import React, { useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
+import React from 'react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import Header from './Header';
 import { ChevronRight, Sparkles, Shield, Zap } from 'lucide-react';
 
-interface HomePageProps {
-    onNavigateToDashboard: () => void;
-    onDisconnect: () => void; // New prop for disconnect handling
-}
+const HomePage = () => {
+    const { setVisible } = useWalletModal();
 
-const HomePage = ({ onNavigateToDashboard, onDisconnect }: HomePageProps) => {
-    const { connected } = useWallet();
-
-    // Auto-navigate to dashboard on connect (redundant with Header, but kept for safety)
-    useEffect(() => {
-        if (connected) {
-            onNavigateToDashboard();
-        }
-    }, [connected, onNavigateToDashboard]);
+    const handleLaunchDashboard = () => {
+        setVisible(true);
+    };
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20"> {/* Add pt-20 to account for fixed header */}
-            <Header
-                onNavigateToDashboard={onNavigateToDashboard}
-                onDisconnect={onDisconnect}
-            />
+        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20">
+            <Header />
 
             {/* Hero Section */}
             <main className="pb-20 px-6">
@@ -52,9 +41,8 @@ const HomePage = ({ onNavigateToDashboard, onDisconnect }: HomePageProps) => {
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <button
-                                onClick={onNavigateToDashboard}
-                                disabled={connected}
-                                className="px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-[#DC1FFF]/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={handleLaunchDashboard}
+                                className="px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-[#DC1FFF]/50 flex items-center justify-center gap-2"
                             >
                                 Launch Dashboard
                                 <ChevronRight className="w-5 h-5" />
