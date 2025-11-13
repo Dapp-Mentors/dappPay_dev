@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "test": "anchor test",
+    "build": "next build && anchor build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -27,6 +28,10 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@coral-xyz/anchor": "^0.29.0",
+    "@types/mocha": "^10.0.6",
+    "ts-mocha": "^10.0.0",
+    "sinon": "^17.0.1"
   }
 }

@@ -1,0 +1,21 @@
+[toolchain]
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+payroll_program = "GAgB59MAefcBHAFSkWCbhvq7FXh9Ue6BsqEh85VKFueQ"
+
+[programs.localnet]
+payroll_program = "GAgB59MAefcBHAFSkWCbhvq7FXh9Ue6BsqEh85VKFueQ"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
