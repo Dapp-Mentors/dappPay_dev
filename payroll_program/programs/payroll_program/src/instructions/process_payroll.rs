@@ -1,7 +1,6 @@
 use crate::errors::PayrollError;
 use crate::states::{Organization, Worker};
 use anchor_lang::prelude::*;
-use anchor_lang::system_program;
 
 pub fn process_payroll<'info>(
     ctx: Context<'_, '_, 'info, 'info, ProcessPayrollCtx<'info>>,
@@ -52,15 +51,6 @@ pub fn process_payroll<'info>(
         PayrollError::InsufficientFunds
     );
 
-    // Prepare org signer seeds before the loop
-    let authority_key = ctx.accounts.authority.key();
-    let org_name = ctx.accounts.org.name.clone();
-    let org_bump = ctx.accounts.org.bump;
-    let name_bytes = org_name.as_bytes();
-    let bump_array = [org_bump];
-    let org_seeds: &[&[u8]] = &[b"org", authority_key.as_ref(), name_bytes, &bump_array];
-    let org_signer = &[org_seeds];
-
     // Second pass: Process payments
     for i in 0..num_workers {
         let pda_idx = i * 2;
@@ -80,19 +70,16 @@ pub fn process_payroll<'info>(
             // Serialize updated worker data
             let mut data = pda_ai.try_borrow_mut_data()?;
             worker.try_serialize(&mut &mut data[..])?;
-            drop(data); // Release the borrow
+            drop(data);
 
-            // Transfer salary
-            let cpi_accounts = system_program::Transfer {
-                from: ctx.accounts.org.to_account_info(),
-                to: wallet_ai.to_account_info(),
-            };
-            let cpi_ctx = CpiContext::new_with_signer(
-                ctx.accounts.system_program.to_account_info(),
-                cpi_accounts,
-                org_signer,
-            );
-            system_program::transfer(cpi_ctx, salary_amount)?;
+            // Transfer lamports directly (not using system_program::transfer)
+            // This is necessary because the org PDA contains data
+            **ctx
+                .accounts
+                .org
+                .to_account_info()
+                .try_borrow_mut_lamports()? -= salary_amount;
+            **wallet_ai.try_borrow_mut_lamports()? += salary_amount;
 
             // Update treasury
             ctx.accounts.org.treasury = ctx.accounts.org.treasury.saturating_sub(salary_amount);
@@ -101,7 +88,7 @@ pub fn process_payroll<'info>(
 
     msg!(
         "Payroll processed for org '{}': {} lamports paid to {} workers",
-        org_name,
+        ctx.accounts.org.name,
         total_payout,
         num_workers
     );
