@@ -5,10 +5,9 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-payroll_program = "GAgB59MAefcBHAFSkWCbhvq7FXh9Ue6BsqEh85VKFueQ"
+payroll_program = "A9fnM3skS5kbECt2isFV2EGvS4D7hnsMjnqi2YBwaeed"
 
 [programs.localnet]
-payroll_program = "GAgB59MAefcBHAFSkWCbhvq7FXh9Ue6BsqEh85VKFueQ"
 
 [registry]
 url = "https://api.apr.dev"
