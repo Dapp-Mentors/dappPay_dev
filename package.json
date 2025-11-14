@@ -10,19 +10,22 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.66",
+    "@ai-sdk/react": "^2.0.93",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",
     "@solana/wallet-adapter-wallets": "^0.19.37",
     "@solana/web3.js": "^1.98.4",
+    "ai": "^5.0.93",
     "lucide-react": "^0.553.0",
     "next": "16.0.1",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "^0.29.0",
-    "@modelcontextprotocol/sdk": "^1.22.0",
     "@tailwindcss/postcss": "^4",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20",
@@ -33,7 +36,6 @@
     "sinon": "^17.0.1",
     "tailwindcss": "^4",
     "ts-mocha": "^10.0.0",
-    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
