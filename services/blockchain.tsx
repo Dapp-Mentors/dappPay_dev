@@ -9,7 +9,7 @@ import {
     ConfirmOptions,
     AccountMeta,
 } from '@solana/web3.js'
-import idl from '../payroll_program/target/idl/payroll_program.json'
+import idl from '../anchor/target/idl/payroll_program.json'
 import { Organization, Worker } from '@/utils/interface'
 import { getClusterURL } from '@/utils/helper'
 
