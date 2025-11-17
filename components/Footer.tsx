@@ -7,7 +7,7 @@ import { Linkedin, Youtube, X, Zap } from 'lucide-react';
 const Footer = () => {
     return (
         <footer className="bg-black/80 backdrop-blur-lg text-white py-16 border-t border-[#DC1FFF]/20">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-[75vw] mx-auto px-6">
                 <div className="grid lg:grid-cols-5 gap-8 mb-12">
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
