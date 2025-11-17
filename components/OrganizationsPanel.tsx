@@ -27,12 +27,19 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
 
     return (
         <>
-            <div className="w-1/3 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm overflow-hidden">
+            {/* Mobile Overlay */}
+            <div
+                className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                onClick={onToggle}
+            />
+
+            {/* Panel */}
+            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 max-h-[85vh] lg:max-h-none z-50 flex flex-col bg-slate-900/95 lg:bg-slate-900/50 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-sm overflow-hidden">
                 {/* Organizations Header */}
-                <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+                <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
                     <div>
-                        <h3 className="text-xl font-bold text-white mb-1">Organizations</h3>
-                        <p className="text-sm text-slate-400">{organizations.length} active</p>
+                        <h3 className="text-lg sm:text-xl font-bold text-white mb-1">Organizations</h3>
+                        <p className="text-xs sm:text-sm text-slate-400">{organizations.length} active</p>
                     </div>
                     <button
                         onClick={onToggle}
@@ -43,34 +50,34 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                 </div>
 
                 {/* Organization Cards */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
                     {organizations.map((org) => (
                         <div
                             key={org.id}
                             onClick={() => onSelectOrg(org.id)}
-                            className={`p-5 bg-slate-800/50 border ${selectedOrg === org.id ? 'border-[#DC1FFF]' : 'border-slate-700'} rounded-xl cursor-pointer hover:border-[#DC1FFF]/50 transition-all duration-200`}
+                            className={`p-4 sm:p-5 bg-slate-800/50 border ${selectedOrg === org.id ? 'border-[#DC1FFF]' : 'border-slate-700'} rounded-xl cursor-pointer hover:border-[#DC1FFF]/50 transition-all duration-200`}
                         >
-                            <div className="flex items-center justify-between mb-4">
-                                <h4 className="font-bold text-white text-lg">{org.orgName}</h4>
-                                <div className="w-2 h-2 bg-[#00FFA3] rounded-full"></div>
+                            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                <h4 className="font-bold text-white text-base sm:text-lg truncate pr-2">{org.orgName}</h4>
+                                <div className="w-2 h-2 bg-[#00FFA3] rounded-full shrink-0"></div>
                             </div>
 
-                            <div className="space-y-3 mb-4">
+                            <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-slate-400 flex items-center gap-2">
-                                        <DollarSign className="w-4 h-4" />
+                                    <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2">
+                                        <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" />
                                         Treasury
                                     </span>
-                                    <span className="text-sm font-semibold text-[#00FFA3]">
+                                    <span className="text-xs sm:text-sm font-semibold text-[#00FFA3]">
                                         {formatLamports(org.treasury)}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm text-slate-400 flex items-center gap-2">
-                                        <Users className="w-4 h-4" />
+                                    <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2">
+                                        <Users className="w-3 h-3 sm:w-4 sm:h-4" />
                                         Workers
                                     </span>
-                                    <span className="text-sm font-semibold text-white">
+                                    <span className="text-xs sm:text-sm font-semibold text-white">
                                         {org.workers.length}
                                     </span>
                                 </div>
@@ -81,9 +88,9 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                     e.stopPropagation();
                                     onViewDetails(org.orgName);
                                 }}
-                                className="w-full py-2 bg-[#DC1FFF]/20 hover:bg-[#DC1FFF]/30 text-[#DC1FFF] rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                                className="w-full py-2 bg-[#DC1FFF]/20 hover:bg-[#DC1FFF]/30 text-[#DC1FFF] rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2"
                             >
-                                <TrendingUp className="w-4 h-4" />
+                                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
                                 View Details
                             </button>
                         </div>
@@ -91,10 +98,10 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
 
                     <button
                         onClick={onCreateOrg}
-                        className="w-full p-5 bg-slate-800/30 border-2 border-dashed border-slate-700 hover:border-[#DC1FFF]/50 rounded-xl transition-all duration-200 flex flex-col items-center justify-center gap-2 group"
+                        className="w-full p-4 sm:p-5 bg-slate-800/30 border-2 border-dashed border-slate-700 hover:border-[#DC1FFF]/50 rounded-xl transition-all duration-200 flex flex-col items-center justify-center gap-2 group"
                     >
-                        <Plus className="w-8 h-8 text-slate-600 group-hover:text-[#DC1FFF] transition-colors" />
-                        <span className="text-sm text-slate-500 group-hover:text-[#DC1FFF] font-medium transition-colors">
+                        <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-slate-600 group-hover:text-[#DC1FFF] transition-colors" />
+                        <span className="text-xs sm:text-sm text-slate-500 group-hover:text-[#DC1FFF] font-medium transition-colors">
                             Create Organization
                         </span>
                     </button>

@@ -60,21 +60,18 @@ interface ZodType {
   [key: string]: unknown;
 }
 
-// FIXED: More robust Zod schema parser
 const getOpenAITools = () => {
   return Object.entries(blockchainMcpTools).map(([name, tool]) => {
     const properties: Record<string, JsonSchemaProperty> = {};
     const required: string[] = [];
 
     try {
-      // Get the Zod schema
       const schema = tool.inputSchema;
 
       if (schema && typeof schema === 'object' && '_def' in schema) {
         const schemaObj = schema as unknown as ZodType;
         const def = schemaObj._def;
 
-        // Handle ZodObject
         if (def.typeName === 'ZodObject' && def.shape) {
           const shape = typeof def.shape === 'function' ? def.shape() : def.shape;
 
@@ -87,13 +84,11 @@ const getOpenAITools = () => {
             let actualDef = innerDef;
             let isOptional = false;
 
-            // Unwrap ZodOptional
             if (innerDef.typeName === 'ZodOptional') {
               isOptional = true;
               actualDef = innerDef.innerType?._def || innerDef;
             }
 
-            // Determine type
             let type: JsonSchemaProperty['type'] = 'string';
             if (actualDef.typeName === 'ZodString') type = 'string';
             else if (actualDef.typeName === 'ZodNumber') type = 'number';
@@ -106,14 +101,12 @@ const getOpenAITools = () => {
               description: actualDef.description || innerDef.description || `${key} parameter`,
             };
 
-            // Handle enums (ZodEnum)
             if (actualDef.typeName === 'ZodEnum' && actualDef.values) {
               properties[key].enum = Array.isArray(actualDef.values)
                 ? actualDef.values
                 : Array.from(actualDef.values);
             }
 
-            // Add to required if not optional
             if (!isOptional) {
               required.push(key);
             }
@@ -140,7 +133,7 @@ const getOpenAITools = () => {
 };
 
 const Dashboard = () => {
-  const [isPayrollOpen, setIsPayrollOpen] = useState(true);
+  const [isPayrollOpen, setIsPayrollOpen] = useState(false); // Default closed on mobile
   const [selectedOrg, setSelectedOrg] = useState<string | null>(null);
   const [organizations, setOrganizations] = useState<PayrollSummary[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -155,12 +148,10 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { publicKey, signTransaction } = useWallet();
 
-  // Set wallet context for tools
   useEffect(() => {
     setWalletContext(publicKey || null, signTransaction || null);
   }, [publicKey, signTransaction]);
 
-  // Load initial organizations
   useEffect(() => {
     const loadOrganizations = async () => {
       const tool = blockchainMcpTools.fetch_user_organizations;
@@ -200,7 +191,6 @@ const Dashboard = () => {
     }
   }, [publicKey]);
 
-  // FIXED: Complete multi-turn conversation with tool results and system prompt
   const generateResponse = async (userInput: string) => {
     setIsLoading(true);
 
@@ -213,7 +203,6 @@ const Dashboard = () => {
       };
       setMessages((prev) => [...prev, userMessage]);
 
-      // Build conversation history with system prompt
       const systemPrompt: OpenAIMessage = {
         role: 'system',
         content: `You are a helpful payroll management assistant on Solana blockchain. 
@@ -256,7 +245,6 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
       let iterations = 0;
       const maxIterations = 5;
 
-      // Multi-turn conversation loop
       while (iterations < maxIterations) {
         iterations++;
 
@@ -288,19 +276,16 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
 
         const message = choice.message;
 
-        // Add assistant message to conversation
         conversationMessages.push({
           role: 'assistant',
           content: message.content || '',
           tool_calls: message.tool_calls,
         });
 
-        // If there's text content, add it to response
         if (message.content) {
           fullResponse += message.content + '\n';
         }
 
-        // Handle tool calls
         if (message.tool_calls && message.tool_calls.length > 0) {
           for (const toolCall of message.tool_calls) {
             const toolName = toolCall.function.name;
@@ -320,7 +305,6 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
                 messages: []
               });
 
-              // Handle AsyncIterable
               if (toolOutput && typeof toolOutput === 'object' && Symbol.asyncIterator in toolOutput) {
                 let str = '';
                 for await (const chunk of toolOutput as AsyncIterable<unknown>) {
@@ -339,7 +323,6 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
 
             fullResponse += `Result: ${toolContent}\n`;
 
-            // Add tool result to conversation
             conversationMessages.push({
               role: 'tool',
               content: toolContent,
@@ -347,11 +330,9 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
             });
           }
 
-          // Continue loop to get AI's response to tool results
           continue;
         }
 
-        // If no tool calls, we're done
         if (choice.finish_reason === 'stop') {
           break;
         }
@@ -369,7 +350,6 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
       };
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // Reload organizations after any action
       if (publicKey) {
         const tool = blockchainMcpTools.fetch_user_organizations;
         const result = await tool.execute!({}, { toolCallId: 'refresh', messages: [] });
@@ -427,17 +407,17 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20">
+    <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-16 sm:pt-20">
       <Header />
 
       {!publicKey && (
-        <div className="fixed top-4 right-4 z-50 p-4 bg-slate-800 text-white rounded-lg">
+        <div className="fixed top-16 sm:top-20 right-2 sm:right-4 z-40 p-3 sm:p-4 bg-slate-800 text-white rounded-lg text-xs sm:text-sm max-w-[90vw] sm:max-w-none">
           <p>Connect your wallet to enable transactions.</p>
         </div>
       )}
 
-      <main className="max-w-[75vw] mx-auto px-6 pb-6 mt-8">
-        <div className="max-w-full h-[calc(100vh-8rem)] flex gap-6">
+      <main className="max-w-[95vw] lg:max-w-[75vw] mx-auto px-3 sm:px-6 pb-6 mt-4 sm:mt-8">
+        <div className="max-w-full min-h-[calc(100vh-35rem)] flex flex-col lg:flex-row gap-4 sm:gap-6">
           <ChatPanel
             messages={messages}
             input={input}
@@ -462,9 +442,9 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
           {!isPayrollOpen && (
             <button
               onClick={handleTogglePanel}
-              className="fixed right-6 top-32 p-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl shadow-lg transition-all duration-200"
+              className="fixed right-4 sm:right-6 bottom-20 sm:bottom-auto sm:top-32 p-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl shadow-lg transition-all duration-200 z-40"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           )}
         </div>
