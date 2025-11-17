@@ -4,7 +4,9 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Header from './Header';
-import { Send, DollarSign, Users, TrendingUp, Plus, Menu, X } from 'lucide-react';
+import ChatPanel from './ChatPanel';
+import OrganizationsPanel from './OrganizationsPanel';
+import { Menu } from 'lucide-react';
 import { Message, PayrollSummary, WorkerSummary } from '@/lib/types';
 import { blockchainMcpTools, setWalletContext } from '@/lib/payroll-mcp-tools';
 import Footer from './Footer';
@@ -73,12 +75,12 @@ const Dashboard = () => {
     setWalletContext(publicKey || null, signTransaction || null);
   }, [publicKey, signTransaction]);
 
-  // Load initial organizations using the tool
+  // Load initial organizations using the tool (switched to user-specific for workers data)
   useEffect(() => {
     const loadOrganizations = async () => {
-      const tool = blockchainMcpTools.fetch_all_organizations;
+      const tool = blockchainMcpTools.fetch_user_organizations;
       if (!tool || !tool.execute) {
-        console.error('fetch_all_organizations tool not available');
+        console.error('fetch_user_organizations tool not available');
         return;
       }
       try {
@@ -90,11 +92,12 @@ const Dashboard = () => {
           if (result.success && Array.isArray(result.organizations)) {
             const mappedOrgs: PayrollSummary[] = result.organizations.map((org: unknown) => {
               const orgData = org as Record<string, unknown>;
+              const workerCount = Number(orgData.workersCount || 0);
               return {
                 id: String(orgData.pda || orgData.name || ''),
                 orgName: String(orgData.name || 'Unknown'),
-                treasury: Number(orgData.treasuryBalance || 0),
-                workers: (orgData.workers || []) as WorkerSummary[],
+                treasury: Number(orgData.treasury || 0), // Assuming lamports; adjust if in SOL
+                workers: Array.from({ length: workerCount }, () => ({}) as WorkerSummary), // Dummy array for correct length
               };
             });
             setOrganizations(mappedOrgs);
@@ -108,10 +111,13 @@ const Dashboard = () => {
         console.error('Failed to load organizations:', error);
       }
     };
-    loadOrganizations();
-  }, []);
+    if (publicKey) { // Only load if wallet connected
+      loadOrganizations();
+    }
+  }, [publicKey]);
 
   // Generate response with tool handling
+
   const generateResponse = async (userInput: string) => {
     setIsLoading(true);
     try {
@@ -131,6 +137,7 @@ const Dashboard = () => {
 
       let fullResponse = '';
       const tools = getOpenAITools();
+      
 
       // Make API call to OpenAI-compatible endpoint
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -147,13 +154,45 @@ const Dashboard = () => {
         }),
       });
 
-      const data = await response.json() as OpenAIResponse;
-      const message = data.choices[0].message;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('OpenAI API Error:', response.status, errorData);
+        throw new Error(`AI API failed (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
+      }
 
+      let data: OpenAIResponse;
+      try {
+        data = await response.json() as OpenAIResponse;
+      } catch (parseErr) {
+        console.error('Failed to parse AI response:', parseErr);
+        throw new Error('Invalid response from AI service');
+      }
+
+      // CRITICAL FIX: Validate response structure before accessing
+      if (!data) {
+        console.error('Empty AI response');
+        throw new Error('AI returned empty response');
+      }
+
+      if (!data.choices || !Array.isArray(data.choices) || data.choices.length === 0) {
+        console.error('Invalid AI Response Structure:', data);
+        throw new Error('AI returned response without choices array');
+      }
+
+      const choice = data.choices[0];
+      if (!choice || !choice.message) {
+        console.error('Invalid choice structure:', choice);
+        throw new Error('AI returned invalid message structure');
+      }
+
+      const message = choice.message;
+
+      // Process the message content
       if (message.content) {
         fullResponse += message.content;
       }
 
+      // Handle tool calls if present
       if (message.tool_calls && message.tool_calls.length > 0) {
         for (const toolCall of message.tool_calls) {
           const toolName = toolCall.function.name;
@@ -180,12 +219,18 @@ const Dashboard = () => {
               }
             }
           } catch (error) {
+            console.error(`Tool execution error for ${toolName}:`, error);
             toolOutput = { error: (error as Error).message };
           }
 
-          const toolContent = typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput);
+          const toolContent = typeof toolOutput === 'string' ? toolOutput : JSON.stringify(toolOutput, null, 2);
           fullResponse += `Result: ${toolContent}\n`;
         }
+      }
+
+      // If no content was generated at all
+      if (!fullResponse.trim()) {
+        fullResponse = 'I received your message but couldn\'t generate a response. Please try again.';
       }
 
       const assistantMessage: ChatMessage = {
@@ -221,6 +266,18 @@ const Dashboard = () => {
     return (lamports / 1000000000).toFixed(2) + ' SOL';
   };
 
+  const handleCreateOrg = () => {
+    generateResponse('Create a new organization');
+  };
+
+  const handleViewDetails = (orgName: string) => {
+    generateResponse(`Show details for organization ${orgName}`);
+  };
+
+  const handleTogglePanel = () => {
+    setIsPayrollOpen(!isPayrollOpen);
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-20">
       <Header />
@@ -236,142 +293,32 @@ const Dashboard = () => {
       <main className="pb-6 mt-8">
         <div className="max-w-full h-[calc(100vh-8rem)] flex gap-6">
           {/* Chat Interface - Left Side */}
-          <div className={`${isPayrollOpen ? 'w-2/3' : 'w-full'} transition-all duration-300 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm overflow-hidden`}>
-            {/* Chat Header */}
-            <div className="p-6 border-b border-slate-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-1">AI Assistant</h2>
-                  <p className="text-sm text-slate-400">Ask me anything about your payroll</p>
-                </div>
-                <div className={`w-3 h-3 rounded-full animate-pulse ${publicKey ? 'bg-[#00FFA3]' : 'bg-yellow-500'}`}></div>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {messages.map((msg, index) => (
-                <div key={msg.id || index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
-                  <div className={`max-w-[70%] ${msg.role === 'user' ? 'bg-linear-to-r from-[#DC1FFF] to-[#00FFA3]' : 'bg-slate-800'} rounded-2xl p-4`}>
-                    <p className={`text-sm leading-relaxed ${msg.role === 'user' ? 'text-black' : 'text-white'}`}>
-                      {msg.content}
-                    </p>
-                    <p className="text-xs text-slate-300 mt-2 opacity-60">
-                      {msg.timestamp?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || ''}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start animate-fadeIn">
-                  <div className="bg-slate-800 rounded-2xl p-4">
-                    <p className="text-sm text-white">AI is thinking...</p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Input Area */}
-            <form onSubmit={handleSubmit} className="p-6 border-t border-slate-800">
-              <div className="flex gap-3">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Type your payroll command here... (e.g., 'Create organization TechCo' or 'Show my orgs')"
-                  className="flex-1 px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-[#DC1FFF] transition-colors disabled:opacity-50"
-                  disabled={isLoading}
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading || !input.trim()}
-                  className="px-6 py-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
-              <p className="text-xs text-slate-500 mt-2">
-                Wallet: {publicKey ? `${publicKey.toBase58().slice(0, 8)}...` : 'Not connected'}
-              </p>
-            </form>
-          </div>
+          <ChatPanel
+            messages={messages}
+            input={input}
+            isLoading={isLoading}
+            isPayrollOpen={isPayrollOpen}
+            publicKey={publicKey}
+            onInputChange={setInput}
+            onSubmit={handleSubmit}
+          />
 
           {/* Organizations List - Right Side */}
-          {isPayrollOpen && (
-            <div className="w-1/3 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm overflow-hidden">
-              {/* Organizations Header */}
-              <div className="p-6 border-b border-slate-800 flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-1">Organizations</h3>
-                  <p className="text-sm text-slate-400">{organizations.length} active</p>
-                </div>
-                <button
-                  onClick={() => setIsPayrollOpen(false)}
-                  className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-slate-400" />
-                </button>
-              </div>
-
-              {/* Organization Cards */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {organizations.map((org) => (
-                  <div
-                    key={org.id}
-                    onClick={() => setSelectedOrg(org.id)}
-                    className={`p-5 bg-slate-800/50 border ${selectedOrg === org.id ? 'border-[#DC1FFF]' : 'border-slate-700'} rounded-xl cursor-pointer hover:border-[#DC1FFF]/50 transition-all duration-200`}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-bold text-white text-lg">{org.orgName}</h4>
-                      <div className="w-2 h-2 bg-[#00FFA3] rounded-full"></div>
-                    </div>
-
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-400 flex items-center gap-2">
-                          <DollarSign className="w-4 h-4" />
-                          Treasury
-                        </span>
-                        <span className="text-sm font-semibold text-[#00FFA3]">
-                          {formatLamports(org.treasury)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-400 flex items-center gap-2">
-                          <Users className="w-4 h-4" />
-                          Workers
-                        </span>
-                        <span className="text-sm font-semibold text-white">
-                          {org.workers.length}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button className="w-full py-2 bg-[#DC1FFF]/20 hover:bg-[#DC1FFF]/30 text-[#DC1FFF] rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                      <TrendingUp className="w-4 h-4" />
-                      View Details
-                    </button>
-                  </div>
-                ))}
-
-                <button
-                  onClick={() => {
-                    generateResponse('Create a new organization');
-                  }}
-                  className="w-full p-5 bg-slate-800/30 border-2 border-dashed border-slate-700 hover:border-[#DC1FFF]/50 rounded-xl transition-all duration-200 flex flex-col items-center justify-center gap-2 group"
-                >
-                  <Plus className="w-8 h-8 text-slate-600 group-hover:text-[#DC1FFF] transition-colors" />
-                  <span className="text-sm text-slate-500 group-hover:text-[#DC1FFF] font-medium transition-colors">
-                    Create Organization
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
+          <OrganizationsPanel
+            organizations={organizations}
+            selectedOrg={selectedOrg}
+            isOpen={isPayrollOpen}
+            onToggle={handleTogglePanel}
+            onSelectOrg={setSelectedOrg}
+            onCreateOrg={handleCreateOrg}
+            onViewDetails={handleViewDetails}
+            formatLamports={formatLamports}
+          />
 
           {/* Toggle Button when closed */}
           {!isPayrollOpen && (
             <button
-              onClick={() => setIsPayrollOpen(true)}
+              onClick={handleTogglePanel}
               className="fixed right-6 top-32 p-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl shadow-lg transition-all duration-200"
             >
               <Menu className="w-6 h-6" />
