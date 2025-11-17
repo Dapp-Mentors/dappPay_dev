@@ -1,15 +1,15 @@
-// Blockchain Interface file for Payroll DApp
-import { AnchorProvider, BN, Program, Wallet, Idl } from '@coral-xyz/anchor'
+// Blockchain Interface file for Payroll DApp - FIXED VERSION
+import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
+import type { PayrollProgram } from '../anchor/target/types/payroll_program'
 import {
     Connection,
     PublicKey,
     SystemProgram,
     TransactionSignature,
     Transaction,
-    ConfirmOptions,
     AccountMeta,
 } from '@solana/web3.js'
-import idl from '../anchor/target/idl/payroll_program.json'
+import idlJson from '../anchor/target/idl/payroll_program.json'
 import { Organization, Worker } from '@/utils/interface'
 import { getClusterURL } from '@/utils/helper'
 
@@ -29,9 +29,16 @@ type RawWorker = {
     bump: number
 }
 
-const PROGRAM_ID = new PublicKey(idl.address)
-const CLUSTER: string = process.env.NEXT_PUBLIC_CLUSTER || 'localhost'
+// Use the JSON directly without type casting
+const idl = idlJson as PayrollProgram
+
+const PROGRAM_ID = new PublicKey(idlJson.address)
+const CLUSTER: string = process.env.NEXT_PUBLIC_CLUSTER || 'devnet'
 const RPC_URL: string = getClusterURL(CLUSTER)
+
+console.log('Cluster:', CLUSTER);
+console.log('RPC URL:', RPC_URL);
+console.log('Program ID:', PROGRAM_ID.toBase58());
 
 interface SignerWallet {
     publicKey: PublicKey
@@ -44,12 +51,16 @@ interface SignerWallet {
  */
 export const getProvider = (
     publicKey: PublicKey | null,
-    signTransaction: (tx: Transaction) => Promise<Transaction>,
-    _sendTransaction?: (tx: Transaction, connection: Connection, options?: ConfirmOptions) => Promise<TransactionSignature>
-): Program<Idl> | null => {
+    signTransaction: (tx: Transaction) => Promise<Transaction>
+): Program<PayrollProgram> | null => {
     if (!publicKey || !signTransaction) {
         console.error('Wallet not connected or missing signTransaction')
         return null
+    }
+
+    if (!RPC_URL || (!RPC_URL.startsWith('http://') && !RPC_URL.startsWith('https://'))) {
+        console.error('Invalid RPC URL:', RPC_URL)
+        throw new Error(`Invalid RPC endpoint: ${RPC_URL}. It must start with http: or https:. Check NEXT_PUBLIC_CLUSTER env var.`)
     }
 
     const connection = new Connection(RPC_URL, 'confirmed')
@@ -72,13 +83,18 @@ export const getProvider = (
         { commitment: 'processed' }
     )
 
-    return new Program(idl as unknown as Idl, PROGRAM_ID, provider)
+    return new Program(idl, provider)
 }
 
 /**
  * Get read-only Anchor program instance (no wallet required)
  */
-export const getProviderReadonly = (): Program<Idl> => {
+export const getProviderReadonly = (): Program<PayrollProgram> => {
+    if (!RPC_URL || (!RPC_URL.startsWith('http://') && !RPC_URL.startsWith('https://'))) {
+        console.error('Invalid RPC URL:', RPC_URL)
+        throw new Error(`Invalid RPC endpoint: ${RPC_URL}. It must start with http: or https:. Check NEXT_PUBLIC_CLUSTER env var.`)
+    }
+
     const connection = new Connection(RPC_URL, 'confirmed')
 
     const wallet = {
@@ -97,39 +113,24 @@ export const getProviderReadonly = (): Program<Idl> => {
         { commitment: 'processed' }
     )
 
-    return new Program(idl as unknown as Idl, PROGRAM_ID, provider)
+    return new Program(idl, provider)
 }
 
 /**
  * Create a new organization
  */
 export const createOrganization = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey,
     name: string
 ): Promise<TransactionSignature> => {
-    const [orgPda] = PublicKey.findProgramAddressSync(
-        [Buffer.from('org'), publicKey.toBuffer(), Buffer.from(name)],
-        program.programId
-    )
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = program.methods.createOrg(name) as any
-
-    const tx = await builder
+    const tx = await program.methods
+        .createOrg(name)
         .accounts({
-            org: orgPda,
             authority: publicKey,
-            systemProgram: SystemProgram.programId,
         })
         .rpc()
 
-    const connection = new Connection(
-        program.provider.connection.rpcEndpoint,
-        'confirmed'
-    )
-
-    await connection.confirmTransaction(tx, 'finalized')
     return tx
 }
 
@@ -137,7 +138,7 @@ export const createOrganization = async (
  * Add a worker to an organization
  */
 export const addWorker = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey,
     orgPda: string,
     workerPublicKey: PublicKey,
@@ -145,30 +146,16 @@ export const addWorker = async (
 ): Promise<TransactionSignature> => {
     const salaryLamports = new BN(Math.round(salaryInSol * 1_000_000_000))
 
-    const [workerPda] = PublicKey.findProgramAddressSync(
-        [Buffer.from('worker'), new PublicKey(orgPda).toBuffer(), workerPublicKey.toBuffer()],
-        program.programId
-    )
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = program.methods.addWorker(salaryLamports) as any
-
-    const tx = await builder
+    const tx = await program.methods
+        .addWorker(salaryLamports)
         .accountsPartial({
-            org: orgPda,
-            worker: workerPda,
+            org: new PublicKey(orgPda),
             workerPubkey: workerPublicKey,
             authority: publicKey,
             systemProgram: SystemProgram.programId,
         })
         .rpc()
 
-    const connection = new Connection(
-        program.provider.connection.rpcEndpoint,
-        'confirmed'
-    )
-
-    await connection.confirmTransaction(tx, 'finalized')
     return tx
 }
 
@@ -176,30 +163,22 @@ export const addWorker = async (
  * Fund organization treasury
  */
 export const fundTreasury = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey,
     orgPda: string,
     amountInSol: number
 ): Promise<TransactionSignature> => {
     const amountLamports = new BN(Math.round(amountInSol * 1_000_000_000))
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = program.methods.fundTreasury(amountLamports) as any
-
-    const tx = await builder
+    const tx = await program.methods
+        .fundTreasury(amountLamports)
         .accountsPartial({
-            org: orgPda,
+            org: new PublicKey(orgPda),
             authority: publicKey,
             systemProgram: SystemProgram.programId,
         })
         .rpc()
 
-    const connection = new Connection(
-        program.provider.connection.rpcEndpoint,
-        'confirmed'
-    )
-
-    await connection.confirmTransaction(tx, 'finalized')
     return tx
 }
 
@@ -207,7 +186,7 @@ export const fundTreasury = async (
  * Process payroll for all workers in an organization
  */
 export const processPayroll = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey,
     orgPda: string,
     cycleTimestamp?: number
@@ -229,24 +208,16 @@ export const processPayroll = async (
         { pubkey: w.account.workerPubkey, isSigner: false, isWritable: true },
     ])
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = program.methods.processPayroll(new BN(timestamp)) as any
-
-    const tx = await builder
+    const tx = await program.methods
+        .processPayroll(new BN(timestamp))
         .accountsPartial({
-            org: orgPda,
+            org: new PublicKey(orgPda),
             authority: publicKey,
             systemProgram: SystemProgram.programId,
         })
         .remainingAccounts(remainingAccounts)
         .rpc()
 
-    const connection = new Connection(
-        program.provider.connection.rpcEndpoint,
-        'confirmed'
-    )
-
-    await connection.confirmTransaction(tx, 'finalized')
     return tx
 }
 
@@ -254,30 +225,22 @@ export const processPayroll = async (
  * Withdraw funds from organization treasury
  */
 export const withdrawFromTreasury = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey,
     orgPda: string,
     amountInSol: number
 ): Promise<TransactionSignature> => {
     const amountLamports = new BN(Math.round(amountInSol * 1_000_000_000))
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = program.methods.withdraw(amountLamports) as any
-
-    const tx = await builder
+    const tx = await program.methods
+        .withdraw(amountLamports)
         .accountsPartial({
-            org: orgPda,
+            org: new PublicKey(orgPda),
             authority: publicKey,
             systemProgram: SystemProgram.programId,
         })
         .rpc()
 
-    const connection = new Connection(
-        program.provider.connection.rpcEndpoint,
-        'confirmed'
-    )
-
-    await connection.confirmTransaction(tx, 'finalized')
     return tx
 }
 
@@ -285,7 +248,7 @@ export const withdrawFromTreasury = async (
  * Fetch all organizations created by a specific authority
  */
 export const fetchUserOrganizations = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     publicKey: PublicKey
 ): Promise<Organization[]> => {
     const organizations = (await program.account.organization.all()) as {
@@ -302,7 +265,7 @@ export const fetchUserOrganizations = async (
  * Fetch all active organizations
  */
 export const fetchAllOrganizations = async (
-    program: Program<Idl>
+    program: Program<PayrollProgram>
 ): Promise<Organization[]> => {
     const organizations = (await program.account.organization.all()) as {
         publicKey: PublicKey
@@ -315,10 +278,10 @@ export const fetchAllOrganizations = async (
  * Fetch organization details by PDA
  */
 export const fetchOrganizationDetails = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     orgPda: string
 ): Promise<Organization> => {
-    const org = (await program.account.organization.fetch(orgPda)) as RawOrganization
+    const org = (await program.account.organization.fetch(new PublicKey(orgPda))) as RawOrganization
 
     const serialized: Organization = {
         publicKey: orgPda,
@@ -336,7 +299,7 @@ export const fetchOrganizationDetails = async (
  * Fetch all workers for a specific organization
  */
 export const fetchOrganizationWorkers = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     orgPda: string
 ): Promise<Worker[]> => {
     const allWorkers = (await program.account.worker.all()) as {
@@ -354,10 +317,10 @@ export const fetchOrganizationWorkers = async (
  * Fetch worker details by PDA
  */
 export const fetchWorkerDetails = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     workerPda: string
 ): Promise<Worker> => {
-    const worker = (await program.account.worker.fetch(workerPda)) as RawWorker
+    const worker = (await program.account.worker.fetch(new PublicKey(workerPda))) as RawWorker
 
     return {
         publicKey: workerPda,
@@ -373,7 +336,7 @@ export const fetchWorkerDetails = async (
  * Fetch all workers for a specific wallet address
  */
 export const fetchWorkersByWallet = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     walletPublicKey: PublicKey
 ): Promise<Worker[]> => {
     const allWorkers = (await program.account.worker.all()) as {
@@ -416,7 +379,7 @@ export const calculateNextPayrollDate = (
  * Check if workers are due for payment
  */
 export const checkPayrollDue = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     orgPda: string,
     cycleType: 'weekly' | 'bi-weekly' | 'monthly' = 'monthly'
 ): Promise<{ due: boolean; workers: Worker[] }> => {
@@ -443,10 +406,10 @@ export const checkPayrollDue = async (
  * Get organization treasury balance in SOL
  */
 export const getOrganizationBalance = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     orgPda: string
 ): Promise<number> => {
-    const org = (await program.account.organization.fetch(orgPda)) as RawOrganization
+    const org = (await program.account.organization.fetch(new PublicKey(orgPda))) as RawOrganization
     return org.treasury.toNumber() / 1e9
 }
 
@@ -454,7 +417,7 @@ export const getOrganizationBalance = async (
  * Calculate total monthly payroll cost
  */
 export const calculateTotalPayrollCost = async (
-    program: Program<Idl>,
+    program: Program<PayrollProgram>,
     orgPda: string
 ): Promise<number> => {
     const workers = await fetchOrganizationWorkers(program, orgPda)
