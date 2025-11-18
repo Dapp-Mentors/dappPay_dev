@@ -18,25 +18,25 @@ export default function PrivacyPage() {
                     </p>
                     <ul className="list-none space-y-3 text-slate-400">
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#DC1FFF]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Database className="w-4 h-4 text-[#DC1FFF]" />
                             </div>
                             <span>Wallet address (public key) for transaction verification — never stored privately.</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#DC1FFF]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Eye className="w-4 h-4 text-[#DC1FFF]" />
                             </div>
                             <span>Chat interactions with our AI (anonymized for improvement).</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#DC1FFF]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <FileCheck className="w-4 h-4 text-[#DC1FFF]" />
                             </div>
                             <span>Usage analytics (aggregated, non-personal).</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#DC1FFF]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Mail className="w-4 h-4 text-[#DC1FFF]" />
                             </div>
                             <span>Contact form submissions (name, email, message).</span>
@@ -59,31 +59,31 @@ export default function PrivacyPage() {
                     <p className="mb-4">Your information is used solely to:</p>
                     <ul className="list-none space-y-3">
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#00FFA3]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Zap className="w-4 h-4 text-[#00FFA3]" />
                             </div>
                             <span>Process payroll transactions on Solana.</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#00FFA3]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Eye className="w-4 h-4 text-[#00FFA3]" />
                             </div>
                             <span>Improve AI responses through anonymized data.</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#00FFA3]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <Mail className="w-4 h-4 text-[#00FFA3]" />
                             </div>
                             <span>Respond to support inquiries.</span>
                         </li>
                         <li className="flex items-start gap-3 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#00FFA3]/30 transition-all duration-300">
-                            <div className="w-6 h-6 bg-gradient-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
+                            <div className="w-6 h-6 bg-linear-to-br from-[#00FFA3]/20 to-[#03E1FF]/20 rounded flex items-center justify-center shrink-0 mt-0.5">
                                 <FileCheck className="w-4 h-4 text-[#00FFA3]" />
                             </div>
                             <span>Ensure compliance with blockchain regulations.</span>
                         </li>
                     </ul>
-                    <p className="mt-4 p-4 bg-gradient-to-r from-[#00FFA3]/10 to-transparent rounded-lg border border-[#00FFA3]/20 font-medium">
+                    <p className="mt-4 p-4 bg-linear-to-r from-[#00FFA3]/10 to-transparent rounded-lg border border-[#00FFA3]/20 font-medium">
                         We never sell or share your data with third parties without explicit consent.
                     </p>
                 </div>
@@ -100,12 +100,12 @@ export default function PrivacyPage() {
                         All data is encrypted in transit and at rest. On-chain data is public by nature of blockchain, but we use zero-knowledge proofs where possible for privacy. Access is controlled via wallet signatures.
                     </p>
                     <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="p-4 bg-gradient-to-br from-slate-800/50 to-slate-700/30 rounded-lg border border-[#03E1FF]/20 hover:border-[#03E1FF]/40 transition-all duration-300">
+                        <div className="p-4 bg-linear-to-br from-slate-800/50 to-slate-700/30 rounded-lg border border-[#03E1FF]/20 hover:border-[#03E1FF]/40 transition-all duration-300">
                             <Lock className="w-8 h-8 text-[#03E1FF] mb-2" />
                             <h4 className="font-semibold text-white mb-1">Encrypted Storage</h4>
                             <p className="text-sm text-slate-400">Military-grade encryption</p>
                         </div>
-                        <div className="p-4 bg-gradient-to-br from-slate-800/50 to-slate-700/30 rounded-lg border border-[#03E1FF]/20 hover:border-[#03E1FF]/40 transition-all duration-300">
+                        <div className="p-4 bg-linear-to-br from-slate-800/50 to-slate-700/30 rounded-lg border border-[#03E1FF]/20 hover:border-[#03E1FF]/40 transition-all duration-300">
                             <Shield className="w-8 h-8 text-[#03E1FF] mb-2" />
                             <h4 className="font-semibold text-white mb-1">Wallet Security</h4>
                             <p className="text-sm text-slate-400">Non-custodial control</p>
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black relative overflow-hidden">
+        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black relative overflow-hidden">
             <Header />
 
             {/* Gradient Orbs */}
@@ -156,7 +156,7 @@ export default function PrivacyPage() {
             <section className="relative z-10 pt-32 pb-20 px-6">
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-3 mb-8 animate-fade-in">
-                        <div className="w-12 h-12 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50">
+                        <div className="w-12 h-12 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50">
                             <Shield className="w-6 h-6 text-black" />
                         </div>
                         <h1 className="text-4xl sm:text-5xl font-bold text-white">Privacy Policy</h1>
@@ -165,7 +165,7 @@ export default function PrivacyPage() {
                         <Clock className="w-4 h-4" />
                         <p>Last updated: November 11, 2025</p>
                     </div>
-                    <p className="text-lg text-slate-300 leading-relaxed p-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30 rounded-xl border border-[#DC1FFF]/20 backdrop-blur-sm animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                    <p className="text-lg text-slate-300 leading-relaxed p-6 bg-linear-to-br from-slate-900/50 to-slate-800/30 rounded-xl border border-[#DC1FFF]/20 backdrop-blur-sm animate-fade-in" style={{ animationDelay: '0.2s' }}>
                         At DappPay, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website, use our services, or interact with us.
                     </p>
                 </div>
@@ -177,11 +177,11 @@ export default function PrivacyPage() {
                     {sections.map((section, index) => (
                         <div
                             key={index}
-                            className="group p-6 sm:p-8 bg-gradient-to-br from-slate-900/50 to-slate-800/30 border border-slate-700/30 rounded-2xl backdrop-blur-sm hover:border-[#DC1FFF]/40 transition-all duration-500 animate-slide-up"
+                            className="group p-6 sm:p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-slate-700/30 rounded-2xl backdrop-blur-sm hover:border-[#DC1FFF]/40 transition-all duration-500 animate-slide-up"
                             style={{ animationDelay: `${index * 0.1}s` }}
                         >
                             <div className="flex items-start gap-4 mb-6">
-                                <div className={`w-12 h-12 bg-gradient-to-br ${section.bgColor} rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 border border-slate-700/50`}>
+                                <div className={`w-12 h-12 bg-linear-to-br ${section.bgColor} rounded-lg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 border border-slate-700/50`}>
                                     <section.icon className={`w-6 h-6 ${section.color}`} />
                                 </div>
                                 <h2 className={`text-2xl font-bold ${section.color} group-hover:scale-105 transition-transform duration-300 origin-left`}>
@@ -196,7 +196,7 @@ export default function PrivacyPage() {
 
                     {/* Contact Section */}
                     <div className="text-center pt-8 border-t border-slate-800 animate-fade-in">
-                        <div className="inline-block p-6 bg-gradient-to-br from-slate-900/50 to-slate-800/30 rounded-xl border border-[#DC1FFF]/20 backdrop-blur-sm hover:border-[#00FFA3]/40 transition-all duration-300">
+                        <div className="inline-block p-6 bg-linear-to-br from-slate-900/50 to-slate-800/30 rounded-xl border border-[#DC1FFF]/20 backdrop-blur-sm hover:border-[#00FFA3]/40 transition-all duration-300">
                             <Mail className="w-8 h-8 text-[#00FFA3] mx-auto mb-3" />
                             <p className="text-slate-400 mb-2">Questions about our privacy policy?</p>
                             <a

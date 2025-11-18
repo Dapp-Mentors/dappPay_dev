@@ -34,14 +34,14 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
             />
 
             {/* Panel */}
-            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 min-h-[50vh] max-h-[85vh] lg:max-h-[80vh] z-40 flex flex-col bg-gradient-to-br from-slate-900/95 to-slate-800/80 lg:from-slate-900/50 lg:to-slate-800/30 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl animate-slide-up lg:animate-none relative group">
+            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 min-h-[50vh] max-h-[85vh] lg:max-h-[80vh] z-40 flex flex-col bg-linear-to-br from-slate-900/95 to-slate-800/80 lg:from-slate-900/50 lg:to-slate-800/30 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl animate-slide-up lg:animate-none relative group">
                 {/* Animated border glow */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#DC1FFF]/20 via-[#00FFA3]/20 to-[#03E1FF]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
+                <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-[#DC1FFF]/20 via-[#00FFA3]/20 to-[#03E1FF]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
 
                 {/* Organizations Header */}
-                <div className="p-4 sm:p-6 border-b border-slate-800/50 flex items-center justify-between shrink-0 bg-gradient-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
+                <div className="p-4 sm:p-6 border-b border-slate-800/50 flex items-center justify-between shrink-0 bg-linear-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50">
+                        <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50">
                             <Building2 className="w-5 h-5 text-black" />
                         </div>
                         <div>
@@ -64,7 +64,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                 <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4 custom-scrollbar">
                     {organizations.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded-full flex items-center justify-center mb-4">
+                            <div className="w-20 h-20 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded-full flex items-center justify-center mb-4">
                                 <Building2 className="w-10 h-10 text-[#DC1FFF]" />
                             </div>
                             <h4 className="text-lg font-bold text-white mb-2">No Organizations Yet</h4>
@@ -77,14 +77,14 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                 onClick={() => onSelectOrg(org.id)}
                                 onMouseEnter={() => setHoveredOrg(org.id)}
                                 onMouseLeave={() => setHoveredOrg(null)}
-                                className={`relative p-4 sm:p-5 bg-gradient-to-br from-slate-800/50 to-slate-700/30 border ${selectedOrg === org.id
+                                className={`relative p-4 sm:p-5 bg-linear-to-br from-slate-800/50 to-slate-700/30 border ${selectedOrg === org.id
                                     ? 'border-[#DC1FFF] shadow-lg shadow-[#DC1FFF]/30'
                                     : 'border-slate-700/50'
                                     } rounded-xl cursor-pointer hover:border-[#DC1FFF]/50 transition-all duration-300 backdrop-blur-sm group/card animate-slide-in overflow-hidden`}
                                 style={{ animationDelay: `${index * 0.1}s` }}
                             >
                                 {/* Hover effect gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#DC1FFF]/10 to-[#00FFA3]/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-linear-to-br from-[#DC1FFF]/10 to-[#00FFA3]/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
 
                                 {/* Sparkle effect on hover */}
                                 {hoveredOrg === org.id && (
@@ -107,7 +107,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                     <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
                                         <div className="flex items-center justify-between p-2 bg-slate-900/30 rounded-lg backdrop-blur-sm border border-slate-700/30 group-hover/card:border-[#00FFA3]/30 transition-all duration-300">
                                             <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-gradient-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded-lg flex items-center justify-center">
+                                                <div className="w-8 h-8 bg-linear-to-br from-[#DC1FFF]/20 to-[#00FFA3]/20 rounded-lg flex items-center justify-center">
                                                     <DollarSign className="w-4 h-4 text-[#00FFA3]" />
                                                 </div>
                                                 Treasury
@@ -118,7 +118,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                         </div>
                                         <div className="flex items-center justify-between p-2 bg-slate-900/30 rounded-lg backdrop-blur-sm border border-slate-700/30 group-hover/card:border-[#03E1FF]/30 transition-all duration-300">
                                             <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-gradient-to-br from-[#03E1FF]/20 to-[#00FFA3]/20 rounded-lg flex items-center justify-center">
+                                                <div className="w-8 h-8 bg-linear-to-br from-[#03E1FF]/20 to-[#00FFA3]/20 rounded-lg flex items-center justify-center">
                                                     <Users className="w-4 h-4 text-[#03E1FF]" />
                                                 </div>
                                                 Workers
@@ -134,9 +134,9 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                             e.stopPropagation();
                                             onViewDetails(org.orgName);
                                         }}
-                                        className="relative w-full py-2 bg-gradient-to-r from-[#DC1FFF]/20 to-[#00FFA3]/20 hover:from-[#DC1FFF]/30 hover:to-[#00FFA3]/30 text-[#DC1FFF] rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 border border-[#DC1FFF]/20 hover:border-[#DC1FFF]/40 group/btn overflow-hidden"
+                                        className="relative w-full py-2 bg-linear-to-r from-[#DC1FFF]/20 to-[#00FFA3]/20 hover:from-[#DC1FFF]/30 hover:to-[#00FFA3]/30 text-[#DC1FFF] rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 border border-[#DC1FFF]/20 hover:border-[#DC1FFF]/40 group/btn overflow-hidden"
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-1000" />
+                                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-1000" />
                                         <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 relative z-10 group-hover/btn:scale-110 transition-transform duration-300" />
                                         <span className="relative z-10">View Details</span>
                                     </button>
@@ -147,10 +147,10 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                 </div>
 
                 {/* Footer Stats */}
-                <div className="p-4 border-t border-slate-800/50 bg-gradient-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
+                <div className="p-4 border-t border-slate-800/50 bg-linear-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
                     <div className="flex items-center justify-between text-xs text-slate-400">
                         <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] rounded-full animate-pulse" />
+                            <div className="w-2 h-2 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] rounded-full animate-pulse" />
                             <span>Live on Solana</span>
                         </div>
                         <div className="flex items-center gap-1">

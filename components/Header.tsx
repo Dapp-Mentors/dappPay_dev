@@ -30,20 +30,20 @@ const Header = () => {
                 : 'bg-black/60 backdrop-blur-lg border-b border-[#DC1FFF]/10'
             }`}>
             {/* Animated gradient line at top */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
 
             <div className="max-w-[90vw] lg:max-w-[75vw] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <div className="flex items-center gap-2 sm:gap-3 group">
                         <Link href="/" className="relative">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 shadow-lg shadow-[#DC1FFF]/50">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 shadow-lg shadow-[#DC1FFF]/50">
                                 <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                             </div>
                             {/* Glow effect */}
-                            <div className="absolute inset-0 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
+                            <div className="absolute inset-0 w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
                         </Link>
                         <div className="relative">
-                            <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#DC1FFF] via-[#00FFA3] to-[#DC1FFF] bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+                            <span className="text-xl sm:text-2xl font-bold bg-linear-to-r from-[#DC1FFF] via-[#00FFA3] to-[#DC1FFF] bg-clip-text text-transparent animate-gradient bg-size-[200%_auto]">
                                 DappPay
                             </span>
                             {/* Sparkle effect */}
@@ -75,8 +75,8 @@ const Header = () => {
                         </>
                     ) : (
                         <div className="relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-300" />
-                            <WalletMultiButton className="relative bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-lg font-medium transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 transform hover:scale-105" />
+                            <div className="absolute -inset-1 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-300" />
+                            <WalletMultiButton className="relative bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-lg font-medium transition-all duration-300 text-xs sm:text-sm px-3 sm:px-4 py-2 transform hover:scale-105" />
                         </div>
                     )}
                 </div>

@@ -97,16 +97,16 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     };
 
     return (
-        <div className={`${isPayrollOpen ? 'hidden lg:flex lg:w-2/3' : 'w-full'} min-h-[50vh] max-h-[80vh] transition-all duration-300 flex flex-col bg-gradient-to-br from-slate-900/50 to-slate-800/30 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl hover:shadow-[#DC1FFF]/20 relative group`}>
+        <div className={`${isPayrollOpen ? 'hidden lg:flex lg:w-2/3' : 'w-full'} min-h-[50vh] max-h-[80vh] transition-all duration-300 flex flex-col bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl hover:shadow-[#DC1FFF]/20 relative group`}>
             {/* Animated border glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#DC1FFF]/20 via-[#00FFA3]/20 to-[#03E1FF]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
+            <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-[#DC1FFF]/20 via-[#00FFA3]/20 to-[#03E1FF]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
 
             {/* Chat Header */}
-            <div className="p-4 sm:p-6 border-b border-slate-800/50 shrink-0 bg-gradient-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
+            <div className="p-4 sm:p-6 border-b border-slate-800/50 shrink-0 bg-linear-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="relative">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-full flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50 animate-pulse">
+                            <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-full flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50 animate-pulse">
                                 <Bot className="w-6 h-6 text-black" />
                             </div>
                             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#00FFA3] rounded-full border-2 border-slate-900 animate-ping" />
@@ -134,13 +134,13 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                         style={{ animationDelay: `${index * 0.05}s` }}
                     >
                         <div className={`max-w-[85%] sm:max-w-[70%] group/message ${msg.role === 'user'
-                                ? 'bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3]'
+                                ? 'bg-linear-to-r from-[#DC1FFF] to-[#00FFA3]'
                                 : 'bg-slate-800/50 backdrop-blur-sm border border-slate-700/50'
                             } rounded-2xl p-3 sm:p-4 shadow-lg hover:shadow-xl transition-all duration-300 relative`}>
                             {/* Message icon */}
                             <div className={`absolute ${msg.role === 'user' ? '-right-2 -top-2' : '-left-2 -top-2'} w-8 h-8 rounded-full ${msg.role === 'user'
-                                    ? 'bg-gradient-to-br from-[#00FFA3] to-[#DC1FFF]'
-                                    : 'bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3]'
+                                    ? 'bg-linear-to-br from-[#00FFA3] to-[#DC1FFF]'
+                                    : 'bg-linear-to-br from-[#DC1FFF] to-[#00FFA3]'
                                 } flex items-center justify-center shadow-lg opacity-0 group-hover/message:opacity-100 transition-opacity duration-300`}>
                                 {msg.role === 'user' ? (
                                     <User className="w-4 h-4 text-black" />
@@ -172,7 +172,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
             </div>
 
             {/* Input Area */}
-            <div className="p-3 sm:p-6 border-t border-slate-800/50 shrink-0 bg-gradient-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
+            <div className="p-3 sm:p-6 border-t border-slate-800/50 shrink-0 bg-linear-to-r from-slate-900/80 to-slate-800/60 backdrop-blur-sm">
                 <div className={`flex gap-2 sm:gap-3 transition-all duration-300 ${isFocused ? 'scale-[1.02]' : ''}`}>
                     <div className="flex-1 relative group">
                         <input
@@ -185,14 +185,14 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                             className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-[#DC1FFF] focus:bg-slate-800/70 transition-all duration-300 disabled:opacity-50 backdrop-blur-sm"
                             disabled={isLoading}
                         />
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#DC1FFF]/20 to-[#00FFA3]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 -z-10" />
+                        <div className="absolute inset-0 rounded-xl bg-linear-to-r from-[#DC1FFF]/20 to-[#00FFA3]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 -z-10" />
                     </div>
                     <button
                         onClick={() => onSubmit()}
                         disabled={isLoading || !input.trim()}
-                        className="relative group px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 shadow-lg hover:shadow-xl overflow-hidden"
+                        className="relative group px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl font-medium transition-all duration-300 transform hover:scale-105 flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 shadow-lg hover:shadow-xl overflow-hidden"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                         <Send className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                         <span className="hidden sm:inline relative z-10">Send</span>
                     </button>
