@@ -132,6 +132,146 @@ const getOpenAITools = () => {
   });
 };
 
+// Helper function to format tool responses beautifully with markdown
+const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>, toolOutput: unknown): string => {
+  const lines: string[] = [];
+
+  // Parse the tool output
+  let outputData: Record<string, unknown> = {};
+  if (typeof toolOutput === 'string') {
+    try {
+      outputData = JSON.parse(toolOutput);
+    } catch {
+      outputData = { result: toolOutput };
+    }
+  } else if (typeof toolOutput === 'object' && toolOutput !== null) {
+    outputData = toolOutput as Record<string, unknown>;
+  }
+
+  // Format based on success or error
+  if ('error' in outputData) {
+    lines.push('');
+    lines.push(`### ❌ Error`);
+    lines.push('');
+    lines.push(`${outputData.error}`);
+    lines.push('');
+    return lines.join('\n');
+  }
+
+  if ('success' in outputData && !outputData.success) {
+    lines.push('');
+    lines.push(`### ⚠️ Operation Failed`);
+    lines.push('');
+    if ('message' in outputData) {
+      lines.push(`${outputData.message}`);
+    }
+    lines.push('');
+    return lines.join('\n');
+  }
+
+  // Format successful responses
+  lines.push('');
+  lines.push('### ✅ Operation Successful');
+  lines.push('');
+
+  // Add message if present
+  if ('message' in outputData && outputData.message) {
+    lines.push(`📝 ${outputData.message}`);
+    lines.push('');
+  }
+
+  // Add signature if present (transaction ID)
+  if ('signature' in outputData && outputData.signature) {
+    lines.push(`🔗 **Transaction ID**: \`${outputData.signature}\``);
+  }
+
+  // Add worker PDA if present
+  if ('workerPda' in outputData && outputData.workerPda) {
+    lines.push(`👤 **Worker Address**: \`${outputData.workerPda}\``);
+  }
+
+  // Add organization PDA if present
+  if ('orgPda' in outputData && outputData.orgPda) {
+    lines.push(`🏢 **Organization Address**: \`${outputData.orgPda}\``);
+  }
+
+  // Add spacing after addresses
+  if ('signature' in outputData || 'workerPda' in outputData || 'orgPda' in outputData) {
+    lines.push('');
+  }
+
+  // Format organizations list
+  if ('organizations' in outputData && Array.isArray(outputData.organizations)) {
+    lines.push('### 📋 Your Organizations');
+    lines.push('');
+    outputData.organizations.forEach((org: unknown, index: number) => {
+      const orgData = org as Record<string, unknown>;
+      lines.push(`**${index + 1}. ${orgData.name || 'Unknown'}**`);
+      lines.push(`- Treasury: **${Number(orgData.treasury || 0).toFixed(2)} SOL**`);
+      lines.push(`- Workers: ${orgData.workersCount || 0}`);
+      if (orgData.publicKey) {
+        lines.push(`- Address: \`${orgData.publicKey}\``);
+      }
+      lines.push('');
+    });
+  }
+
+  // Format organization details
+  if ('organization' in outputData && typeof outputData.organization === 'object') {
+    const org = outputData.organization as Record<string, unknown>;
+    lines.push('### 🏢 Organization Details');
+    lines.push('');
+    lines.push(`**Name**: ${org.name || 'Unknown'}`);
+    lines.push(`**Treasury Balance**: ${Number(org.treasury || 0).toFixed(2)} SOL`);
+    lines.push(`**Total Workers**: ${org.workersCount || 0}`);
+    
+    if (org.workers && Array.isArray(org.workers) && org.workers.length > 0) {
+      lines.push('');
+      lines.push('#### 👥 Workers');
+      lines.push('');
+      org.workers.forEach((worker: unknown, index: number) => {
+        const w = worker as Record<string, unknown>;
+        lines.push(`**${index + 1}.** \`${w.publicKey || 'N/A'}\``);
+        lines.push(`- Salary: **${Number(w.salary || 0).toFixed(2)} SOL**`);
+        lines.push(`- Last Paid: ${w.lastPaid ? new Date(Number(w.lastPaid) * 1000).toLocaleDateString() : 'Never'}`);
+        lines.push('');
+      });
+    }
+  }
+
+  // Format payroll results
+  if ('results' in outputData && Array.isArray(outputData.results)) {
+    lines.push('### 💰 Payroll Processing Results');
+    lines.push('');
+    outputData.results.forEach((result: unknown) => {
+      const r = result as Record<string, unknown>;
+      const status = r.success ? '✅' : '❌';
+      lines.push(`${status} Worker \`${r.workerPublicKey || 'Unknown'}\`: ${r.message || 'No details'}`);
+    });
+    lines.push('');
+  }
+
+  // Add any other relevant fields
+  const displayedKeys = ['success', 'message', 'signature', 'workerPda', 'orgPda', 'organizations', 'organization', 'results', 'error'];
+  const remainingKeys = Object.keys(outputData).filter(key => !displayedKeys.includes(key));
+  
+  if (remainingKeys.length > 0) {
+    lines.push('### 📊 Additional Details');
+    lines.push('');
+    remainingKeys.forEach(key => {
+      const value = outputData[key];
+      if (typeof value === 'object') {
+        lines.push(`- **${key}**: \`${JSON.stringify(value)}\``);
+      } else {
+        lines.push(`- **${key}**: ${value}`);
+      }
+    });
+    lines.push('');
+  }
+
+  return lines.join('\n');
+};
+
 const Dashboard = () => {
   // Initialize panel state based on screen size
   const [isPayrollOpen, setIsPayrollOpen] = useState(false);
@@ -242,6 +382,7 @@ const Dashboard = () => {
         3. For fetch_organization_details, you MUST provide the orgPda parameter - use the ID from the organizations list
         4. If a parameter is missing, ask the user for it
         5. Be conversational and friendly in your responses
+        6. After tools execute, provide a brief, natural summary - the tool results are already formatted nicely
 
         Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
       };
@@ -309,8 +450,6 @@ const Dashboard = () => {
             const toolName = toolCall.function.name;
             const toolArgs = JSON.parse(toolCall.function.arguments || '{}');
 
-            fullResponse += `\n🔧 Calling ${toolName} with ${JSON.stringify(toolArgs)}...\n`;
-
             let toolOutput: unknown;
             try {
               const tool = blockchainMcpTools[toolName as keyof typeof blockchainMcpTools];
@@ -335,11 +474,13 @@ const Dashboard = () => {
               toolOutput = { error: (error as Error).message };
             }
 
+            // Use the new formatting function
+            const formattedOutput = formatToolResponse(toolName, toolArgs, toolOutput);
+            fullResponse += formattedOutput;
+
             const toolContent = typeof toolOutput === 'string'
               ? toolOutput
               : JSON.stringify(toolOutput, null, 2);
-
-            fullResponse += `Result: ${toolContent}\n`;
 
             conversationMessages.push({
               role: 'tool',
