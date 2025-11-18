@@ -447,11 +447,11 @@ const TestPage = () => {
     };
 
     if (!isMounted) {
-        return <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">Loading...</div>;
+        return <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 p-8">Loading...</div>;
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+        <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-purple-500/20">
@@ -464,7 +464,7 @@ const TestPage = () => {
                                 Test all blockchain functions with dummy data
                             </p>
                         </div>
-                        <DynamicWalletMultiButton className="!bg-purple-600 hover:!bg-purple-700" />
+                        <DynamicWalletMultiButton className="bg-purple-600! hover:bg-purple-700!" />
                     </div>
                 </div>
 

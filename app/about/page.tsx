@@ -1,7 +1,6 @@
 // app/about/page.tsx
 "use client"
 
-import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Sparkles, Shield, Zap, Users, Zap as ZapIcon } from 'lucide-react';
@@ -71,7 +70,7 @@ export default function AboutPage() {
                     <h2 className="text-3xl font-bold mb-12 text-center text-white">Our Team</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         <div className="text-center p-6 bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#DC1FFF] to-[#00FFA3] rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <div className="w-20 h-20 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-full mx-auto mb-4 flex items-center justify-center">
                                 <Users className="w-10 h-10 text-black" />
                             </div>
                             <h3 className="text-xl font-bold mb-2 text-white">Alice Johnson</h3>
@@ -79,7 +78,7 @@ export default function AboutPage() {
                             <p className="text-sm text-slate-500">Visionary leader with 10+ years in blockchain and fintech.</p>
                         </div>
                         <div className="text-center p-6 bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#03E1FF] to-[#00FFA3] rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <div className="w-20 h-20 bg-linear-to-br from-[#03E1FF] to-[#00FFA3] rounded-full mx-auto mb-4 flex items-center justify-center">
                                 <Zap className="w-10 h-10 text-black" />
                             </div>
                             <h3 className="text-xl font-bold mb-2 text-white">Bob Smith</h3>
@@ -87,7 +86,7 @@ export default function AboutPage() {
                             <p className="text-sm text-slate-500">Solana expert driving our high-performance architecture.</p>
                         </div>
                         <div className="text-center p-6 bg-slate-900/50 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm">
-                            <div className="w-20 h-20 bg-gradient-to-br from-[#00FFA3] to-[#DC1FFF] rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <div className="w-20 h-20 bg-linear-to-br from-[#00FFA3] to-[#DC1FFF] rounded-full mx-auto mb-4 flex items-center justify-center">
                                 <Sparkles className="w-10 h-10 text-black" />
                             </div>
                             <h3 className="text-xl font-bold mb-2 text-white">Carol Lee</h3>

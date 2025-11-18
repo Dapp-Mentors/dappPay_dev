@@ -1,6 +1,6 @@
 // app/components/OrganizationsPanel.tsx
 import { X, DollarSign, Users, TrendingUp } from 'lucide-react';
-import { PayrollSummary } from '@/lib/types';
+import { PayrollSummary } from '@/utils/interface';
 
 interface OrganizationsPanelProps {
     organizations: PayrollSummary[];

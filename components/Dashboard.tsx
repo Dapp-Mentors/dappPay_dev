@@ -6,7 +6,7 @@ import Header from './Header';
 import ChatPanel from './ChatPanel';
 import OrganizationsPanel from './OrganizationsPanel';
 import { Menu } from 'lucide-react';
-import { Message, PayrollSummary, WorkerSummary } from '@/lib/types';
+import { Message, PayrollSummary, WorkerSummary } from '@/utils/interface';
 import { blockchainMcpTools, setWalletContext } from '@/lib/payroll-mcp-tools';
 import Footer from './Footer';
 

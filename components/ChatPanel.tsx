@@ -2,7 +2,7 @@
 "use client"
 
 import { Send } from 'lucide-react';
-import { Message } from '@/lib/types';
+import { Message } from '@/utils/interface';
 import { PublicKey } from '@solana/web3.js';
 
 type ChatMessage = Message & {

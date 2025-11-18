@@ -113,8 +113,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with name length error')
-      } catch (error) {
-        const errorStr = error.toString()
+      } catch (error: unknown) {
+        const errorStr = (error as Error).toString()
         // Accept either InvalidName error or PDA seed length error
         assert.isTrue(
           errorStr.includes('InvalidName') ||
@@ -135,8 +135,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed due to account already initialized')
-      } catch (error) {
-        assert.isTrue(error.toString().includes('already in use'))
+      } catch (error: unknown) {
+        assert.isTrue((error as Error).toString().includes('already in use'))
       }
     })
 
@@ -255,8 +255,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with InvalidSalary error')
-      } catch (error) {
-        assert.include(error.toString(), 'InvalidSalary')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'InvalidSalary')
       }
     })
 
@@ -279,13 +279,13 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with authorization error')
-      } catch (error) {
+      } catch (error: unknown) {
         // Check if error exists (which means the transaction failed as expected)
         // This is sufficient since we know it should fail for unauthorized access
         assert.isDefined(error, 'Expected an error to be thrown')
 
         // Optionally verify it's not a different type of error
-        const errorStr = error.toString().toLowerCase()
+        const errorStr = (error as Error).toString().toLowerCase()
         assert.isFalse(
           errorStr.includes('insufficient funds') ||
             errorStr.includes('balance'),
@@ -364,8 +364,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with InvalidAmount error')
-      } catch (error) {
-        assert.include(error.toString(), 'InvalidAmount')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'InvalidAmount')
       }
     })
 
@@ -385,10 +385,10 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with authorization error')
-      } catch (error) {
+      } catch (error: unknown) {
         assert.isDefined(error, 'Expected an error to be thrown')
 
-        const errorStr = error.toString().toLowerCase()
+        const errorStr = (error as Error).toString().toLowerCase()
         assert.isFalse(
           errorStr.includes('insufficient funds') ||
             errorStr.includes('balance'),
@@ -579,8 +579,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with InsufficientFunds error')
-      } catch (error) {
-        assert.include(error.toString(), 'InsufficientFunds')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'InsufficientFunds')
       }
     })
 
@@ -601,8 +601,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with MissingWorkerAccount error')
-      } catch (error) {
-        assert.include(error.toString(), 'MissingWorkerAccount')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'MissingWorkerAccount')
       }
     })
   })
@@ -651,8 +651,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with InvalidAmount error')
-      } catch (error) {
-        assert.include(error.toString(), 'InvalidAmount')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'InvalidAmount')
       }
     })
 
@@ -671,8 +671,8 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with InsufficientFunds error')
-      } catch (error) {
-        assert.include(error.toString(), 'InsufficientFunds')
+      } catch (error: unknown) {
+        assert.include((error as Error).toString(), 'InsufficientFunds')
       }
     })
 
@@ -692,10 +692,10 @@ describe('Payroll Program - Comprehensive Tests', () => {
           .rpc()
 
         assert.fail('Should have failed with authorization error')
-      } catch (error) {
+      } catch (error: unknown) {
         assert.isDefined(error, 'Expected an error to be thrown')
 
-        const errorStr = error.toString().toLowerCase()
+        const errorStr = (error as Error).toString().toLowerCase()
         assert.isFalse(
           errorStr.includes('insufficient funds') ||
             errorStr.includes('balance'),
