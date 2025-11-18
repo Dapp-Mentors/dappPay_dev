@@ -46,7 +46,7 @@ const Header = () => {
                             </button>
                         </>
                     ) : (
-                        <WalletMultiButton className="!bg-[#DC1FFF] !hover:bg-[#00FFA3] !text-black !rounded-lg !font-medium !transition-all !duration-200 !text-xs sm:!text-sm !px-3 sm:!px-4 !py-2" />
+                        <WalletMultiButton className="bg-[#DC1FFF]! hover:bg-[#00FFA3]! text-black! rounded-lg! font-medium! transition-all! duration-200! text-xs! sm:text-sm! px-3! sm:px-4! py-2!" />
                     )}
                 </div>
             </div>

@@ -46,7 +46,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                 {messages.map((msg, index) => (
                     <div key={msg.id || index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
                         <div className={`max-w-[85%] sm:max-w-[70%] ${msg.role === 'user' ? 'bg-linear-to-r from-[#DC1FFF] to-[#00FFA3]' : 'bg-slate-800'} rounded-xl sm:rounded-2xl p-3 sm:p-4`}>
-                            <p className={`text-xs sm:text-sm leading-relaxed ${msg.role === 'user' ? 'text-black' : 'text-white'} break-words`}>
+                            <p className={`text-xs sm:text-sm leading-relaxed ${msg.role === 'user' ? 'text-black' : 'text-white'} break-all`}>
                                 {msg.content}
                             </p>
                             <p className="text-[10px] sm:text-xs text-slate-300 mt-1 sm:mt-2 opacity-60">

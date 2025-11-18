@@ -1,3 +1,5 @@
+// utils/interface.ts
+
 /**
  * Organization account interface
  */
@@ -7,6 +9,7 @@ export interface Organization {
   name: string
   treasury: number // in SOL
   workersCount: number
+  createdAt: number // timestamp in milliseconds
   bump: number
 }
 
@@ -19,6 +22,7 @@ export interface Worker {
   workerPubkey: string
   salary: number // in SOL
   lastPaidCycle: number // timestamp in milliseconds
+  createdAt: number // timestamp in milliseconds
   bump: number
 }
 

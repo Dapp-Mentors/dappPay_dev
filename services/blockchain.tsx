@@ -18,6 +18,7 @@ type RawOrganization = {
     name: string
     treasury: BN
     workersCount: BN
+    createdAt: BN        // ← Anchor uses camelCase!
     bump: number
 }
 
@@ -26,6 +27,7 @@ type RawWorker = {
     workerPubkey: PublicKey
     salary: BN
     lastPaidCycle: BN
+    createdAt: BN        // ← Anchor uses camelCase!
     bump: number
 }
 
@@ -289,6 +291,7 @@ export const fetchOrganizationDetails = async (
         name: org.name,
         treasury: org.treasury.toNumber() / 1e9,
         workersCount: org.workersCount.toNumber(),
+        createdAt: Number(org.createdAt || 0),
         bump: org.bump,
     }
 
@@ -328,6 +331,7 @@ export const fetchWorkerDetails = async (
         workerPubkey: worker.workerPubkey.toBase58(),
         salary: worker.salary.toNumber() / 1e9,
         lastPaidCycle: worker.lastPaidCycle.toNumber() * 1000, // Convert to milliseconds
+        createdAt: Number(worker.createdAt || 0),
         bump: worker.bump,
     }
 }
@@ -460,8 +464,10 @@ const serializeOrganizations = (organizations: { publicKey: PublicKey; account: 
         name: org.account.name,
         treasury: org.account.treasury.toNumber() / 1e9,
         workersCount: org.account.workersCount.toNumber(),
+        createdAt: Number(org.account.createdAt || 0),
         bump: org.account.bump,
     }))
+    .sort((a, b) => b.createdAt - a.createdAt)
 }
 
 /**
@@ -474,6 +480,8 @@ const serializeWorkers = (workers: { publicKey: PublicKey; account: RawWorker }[
         workerPubkey: w.account.workerPubkey.toBase58(),
         salary: w.account.salary.toNumber() / 1e9,
         lastPaidCycle: w.account.lastPaidCycle.toNumber() * 1000, // Convert to milliseconds
+        createdAt: Number(w.account.createdAt || 0),
         bump: w.account.bump,
     }))
+    .sort((a, b) => b.createdAt - a.createdAt)
 }

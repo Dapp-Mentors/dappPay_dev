@@ -13,6 +13,7 @@ pub fn create_org(ctx: Context<CreateOrgCtx>, name: String) -> Result<()> {
     org.name = name.clone();
     org.treasury = 0;
     org.workers_count = 0;
+    org.created_at = Clock::get()?.unix_timestamp;
     org.bump = ctx.bumps.org;
 
     msg!("Organization '{}' created", name);

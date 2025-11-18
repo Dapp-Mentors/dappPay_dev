@@ -1,5 +1,5 @@
 // app/components/OrganizationsPanel.tsx
-import { X, DollarSign, Users, TrendingUp, Plus } from 'lucide-react';
+import { X, DollarSign, Users, TrendingUp } from 'lucide-react';
 import { PayrollSummary } from '@/lib/types';
 
 interface OrganizationsPanelProps {
@@ -8,7 +8,6 @@ interface OrganizationsPanelProps {
     isOpen: boolean;
     onToggle: () => void;
     onSelectOrg: (id: string) => void;
-    onCreateOrg: () => void;
     onViewDetails: (orgName: string) => void;
     formatLamports: (lamports: number) => string;
 }
@@ -19,7 +18,6 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
     isOpen,
     onToggle,
     onSelectOrg,
-    onCreateOrg,
     onViewDetails,
     formatLamports,
 }) => {
@@ -70,6 +68,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                                     </span>
                                     <span className="text-xs sm:text-sm font-semibold text-[#00FFA3]">
                                         {formatLamports(org.treasury)}
+                                        {/* {org.treasury} */}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -95,16 +94,6 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
                             </button>
                         </div>
                     ))}
-
-                    <button
-                        onClick={onCreateOrg}
-                        className="w-full p-4 sm:p-5 bg-slate-800/30 border-2 border-dashed border-slate-700 hover:border-[#DC1FFF]/50 rounded-xl transition-all duration-200 flex flex-col items-center justify-center gap-2 group"
-                    >
-                        <Plus className="w-6 h-6 sm:w-8 sm:h-8 text-slate-600 group-hover:text-[#DC1FFF] transition-colors" />
-                        <span className="text-xs sm:text-sm text-slate-500 group-hover:text-[#DC1FFF] font-medium transition-colors">
-                            Create Organization
-                        </span>
-                    </button>
                 </div>
             </div>
         </>

@@ -10,6 +10,7 @@ pub fn add_worker(ctx: Context<AddWorkerCtx>, salary: u64) -> Result<()> {
     worker.worker_pubkey = ctx.accounts.worker_pubkey.key();
     worker.salary = salary;
     worker.last_paid_cycle = 0;
+    worker.created_at = Clock::get()?.unix_timestamp;
     worker.bump = ctx.bumps.worker;
 
     let org = &mut ctx.accounts.org;

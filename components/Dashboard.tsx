@@ -133,7 +133,8 @@ const getOpenAITools = () => {
 };
 
 const Dashboard = () => {
-  const [isPayrollOpen, setIsPayrollOpen] = useState(false); // Default closed on mobile
+  // Initialize panel state based on screen size
+  const [isPayrollOpen, setIsPayrollOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<string | null>(null);
   const [organizations, setOrganizations] = useState<PayrollSummary[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -147,6 +148,22 @@ const Dashboard = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { publicKey, signTransaction } = useWallet();
+
+  // Set initial panel state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      // Open by default on desktop (lg breakpoint: 1024px), closed on mobile
+      setIsPayrollOpen(window.innerWidth >= 1024);
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     setWalletContext(publicKey || null, signTransaction || null);
@@ -175,6 +192,7 @@ const Dashboard = () => {
                 id: String(orgData.publicKey || orgData.name || ''),
                 orgName: String(orgData.name || 'Unknown'),
                 treasury: Number(orgData.treasury || 0),
+                createdAt: Number(orgData.createdAt || 0),
                 workers: Array.from({ length: workerCount }, () => ({}) as WorkerSummary),
               };
             });
@@ -207,25 +225,25 @@ const Dashboard = () => {
         role: 'system',
         content: `You are a helpful payroll management assistant on Solana blockchain. 
 
-Your available organizations:
-${organizations.map(org => `- ${org.orgName} (ID: ${org.id})`).join('\n')}
+        Your available organizations:
+        ${organizations.map(org => `- ${org.orgName} (ID: ${org.id})`).join('\n')}
 
-When users ask to:
-- "Show organizations" or "list my orgs" → use fetch_user_organizations (no parameters needed)
-- "Show details for [ORG_NAME]" → use fetch_organization_details with orgPda from the list above
-- "Create organization [NAME]" → use create_organization with the name parameter
-- "Add worker" → use add_worker with orgPda, workerPublicKey, and salaryInSol
-- "Fund treasury" → use fund_treasury with orgPda and amountInSol
-- "Process payroll" → use process_payroll with orgPda
+        When users ask to:
+        - "Show organizations" or "list my orgs" → use fetch_user_organizations (no parameters needed)
+        - "Show details for [ORG_NAME]" → use fetch_organization_details with orgPda from the list above
+        - "Create organization [NAME]" → use create_organization with the name parameter
+        - "Add worker" → use add_worker with orgPda, workerPublicKey, and salaryInSol
+        - "Fund treasury" → use fund_treasury with orgPda and amountInSol
+        - "Process payroll" → use process_payroll with orgPda
 
-CRITICAL RULES:
-1. When a user mentions an organization by name (like "TESLA"), look it up in the list above to get its orgPda/ID
-2. Always extract ALL required parameters from user requests
-3. For fetch_organization_details, you MUST provide the orgPda parameter - use the ID from the organizations list
-4. If a parameter is missing, ask the user for it
-5. Be conversational and friendly in your responses
+        CRITICAL RULES:
+        1. When a user mentions an organization by name (like "TESLA"), look it up in the list above to get its orgPda/ID
+        2. Always extract ALL required parameters from user requests
+        3. For fetch_organization_details, you MUST provide the orgPda parameter - use the ID from the organizations list
+        4. If a parameter is missing, ask the user for it
+        5. Be conversational and friendly in your responses
 
-Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
+        Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
       };
 
       const conversationMessages: OpenAIMessage[] = [
@@ -362,6 +380,7 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
               orgName: String(orgData.name || 'Unknown'),
               treasury: Number(orgData.treasury || 0),
               workers: Array.from({ length: workerCount }, () => ({}) as WorkerSummary),
+              createdAt: Number(orgData.createdAt || 0),
             };
           });
           setOrganizations(mappedOrgs);
@@ -391,11 +410,7 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
   };
 
   const formatLamports = (lamports: number) => {
-    return (lamports / 1000000000).toFixed(2) + ' SOL';
-  };
-
-  const handleCreateOrg = () => {
-    generateResponse('Create a new organization');
+    return lamports.toFixed(2) + ' SOL';
   };
 
   const handleViewDetails = (orgName: string) => {
@@ -434,15 +449,16 @@ Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
             isOpen={isPayrollOpen}
             onToggle={handleTogglePanel}
             onSelectOrg={setSelectedOrg}
-            onCreateOrg={handleCreateOrg}
             onViewDetails={handleViewDetails}
             formatLamports={formatLamports}
           />
 
+          {/* Toggle button - shows when panel is closed */}
           {!isPayrollOpen && (
             <button
               onClick={handleTogglePanel}
               className="fixed right-4 sm:right-6 bottom-20 sm:bottom-auto sm:top-32 p-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-xl shadow-lg transition-all duration-200 z-40"
+              aria-label="Open organizations panel"
             >
               <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
