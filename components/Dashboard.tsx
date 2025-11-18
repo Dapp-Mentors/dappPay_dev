@@ -224,7 +224,7 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     lines.push(`**Name**: ${org.name || 'Unknown'}`);
     lines.push(`**Treasury Balance**: ${Number(org.treasury || 0).toFixed(2)} SOL`);
     lines.push(`**Total Workers**: ${org.workersCount || 0}`);
-    
+
     if (org.workers && Array.isArray(org.workers) && org.workers.length > 0) {
       lines.push('');
       lines.push('#### 👥 Workers');
@@ -254,7 +254,7 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
   // Add any other relevant fields
   const displayedKeys = ['success', 'message', 'signature', 'workerPda', 'orgPda', 'organizations', 'organization', 'results', 'error'];
   const remainingKeys = Object.keys(outputData).filter(key => !displayedKeys.includes(key));
-  
+
   if (remainingKeys.length > 0) {
     lines.push('### 📊 Additional Details');
     lines.push('');
