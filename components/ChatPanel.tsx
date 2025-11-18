@@ -1,6 +1,7 @@
 // app/components/ChatPanel.tsx
 "use client"
 
+import { useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Message } from '@/utils/interface';
 import { PublicKey } from '@solana/web3.js';
@@ -30,6 +31,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     onInputChange,
     onSubmit,
 }) => {
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
     // Define markdown components with proper types
     const markdownComponents: Components = {
         p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
@@ -69,7 +76,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     };
 
     return (
-        <div className={`${isPayrollOpen ? 'hidden lg:flex lg:w-2/3' : 'w-full'} h-full transition-all duration-300 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-xl sm:rounded-2xl backdrop-blur-sm overflow-hidden`}>
+        <div className={`${isPayrollOpen ? 'hidden lg:flex lg:w-2/3' : 'w-full'} min-h-[50vh] max-h-[80vh] transition-all duration-300 flex flex-col bg-slate-900/50 border border-[#DC1FFF]/20 rounded-xl sm:rounded-2xl backdrop-blur-sm overflow-hidden`}>
             {/* Chat Header */}
             <div className="p-4 sm:p-6 border-b border-slate-800 shrink-0">
                 <div className="flex items-center justify-between">
@@ -85,7 +92,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
                 {messages.map((msg, index) => (
                     <div key={msg.id || index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
-                        <div className={`max-w-[85%] sm:max-w-[70%] ${msg.role === 'user' ? 'bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3]' : 'bg-slate-800'} rounded-xl sm:rounded-2xl p-3 sm:p-4`}>
+                        <div className={`max-w-[85%] sm:max-w-[70%] ${msg.role === 'user' ? 'bg-linear-to-r from-[#DC1FFF] to-[#00FFA3]' : 'bg-slate-800'} rounded-xl sm:rounded-2xl p-3 sm:p-4`}>
                             <div className={`text-xs sm:text-sm leading-relaxed ${msg.role === 'user' ? 'text-black' : 'text-white'} break-all`}> {/* Fixed: break-all instead of break-words */}
                                 {msg.role === 'user' ? (
                                     <p className="whitespace-pre-wrap break-all">{msg.content}</p>
@@ -111,6 +118,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                         </div>
                     </div>
                 )}
+                <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
@@ -126,7 +134,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                     <button
                         type="submit"
                         disabled={isLoading || !input.trim()}
-                        className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-lg sm:rounded-xl font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 disabled:opacity-50"
+                        className="px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] hover:from-[#00FFA3] hover:to-[#DC1FFF] text-black rounded-lg sm:rounded-xl font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 disabled:opacity-50"
                     >
                         <Send className="w-4 h-4" />
                     </button>

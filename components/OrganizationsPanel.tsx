@@ -32,7 +32,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
             />
 
             {/* Panel */}
-            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 max-h-[85vh] lg:max-h-none z-50 flex flex-col bg-slate-900/95 lg:bg-slate-900/50 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-sm overflow-hidden">
+            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 min-h-[50vh] max-h-[85vh] lg:max-h-[80vh] z-50 flex flex-col bg-slate-900/95 lg:bg-slate-900/50 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-sm overflow-hidden">
                 {/* Organizations Header */}
                 <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
                     <div>
