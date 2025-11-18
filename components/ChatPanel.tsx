@@ -31,11 +31,16 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
     onInputChange,
     onSubmit,
 }) => {
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const chatRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+        if (chatRef.current) {
+            chatRef.current.scrollTo({
+                top: chatRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }, [messages, isLoading]);
 
     // Define markdown components with proper types
     const markdownComponents: Components = {
@@ -89,7 +94,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
+            <div ref={chatRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4" id="messages-container">
                 {messages.map((msg, index) => (
                     <div key={msg.id || index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}>
                         <div className={`max-w-[85%] sm:max-w-[70%] ${msg.role === 'user' ? 'bg-linear-to-r from-[#DC1FFF] to-[#00FFA3]' : 'bg-slate-800'} rounded-xl sm:rounded-2xl p-3 sm:p-4`}>
@@ -118,7 +123,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                         </div>
                     </div>
                 )}
-                <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
