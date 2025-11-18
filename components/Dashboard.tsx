@@ -375,6 +375,7 @@ const Dashboard = () => {
         - "Add worker" → use add_worker with orgPda, workerPublicKey, and salaryInSol
         - "Fund treasury" → use fund_treasury with orgPda and amountInSol
         - "Process payroll" → use process_payroll with orgPda
+        - "Withdraw [AMOUNT] from [ORG_NAME]" → use withdraw_from_treasury with orgPda and amountInSol
 
         CRITICAL RULES:
         1. When a user mentions an organization by name (like "TESLA"), look it up in the list above to get its orgPda/ID
