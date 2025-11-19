@@ -1,94 +1,10 @@
-import { useEffect, useRef } from 'react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { ChevronRight, Sparkles, Shield, Zap, Cpu, Lock, TrendingUp } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
+import ParticleBackground from './ParticleBackground';
 
-const ParticleBackground = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const particles: Array<{
-            x: number;
-            y: number;
-            size: number;
-            speedX: number;
-            speedY: number;
-            color: string;
-        }> = [];
-
-        const colors = ['#DC1FFF', '#00FFA3', '#03E1FF'];
-
-        for (let i = 0; i < 50; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 2 + 1,
-                speedX: (Math.random() - 0.5) * 0.5,
-                speedY: (Math.random() - 0.5) * 0.5,
-                color: colors[Math.floor(Math.random() * colors.length)]
-            });
-        }
-
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            particles.forEach((particle, i) => {
-                particle.x += particle.speedX;
-                particle.y += particle.speedY;
-
-                if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-                if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-
-                ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                ctx.fillStyle = particle.color;
-                ctx.fill();
-
-                // Draw connections
-                particles.slice(i + 1).forEach(particle2 => {
-                    const dx = particle.x - particle2.x;
-                    const dy = particle.y - particle2.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 150) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = particle.color;
-                        ctx.globalAlpha = 0.1 * (1 - distance / 150);
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particle.x, particle.y);
-                        ctx.lineTo(particle2.x, particle2.y);
-                        ctx.stroke();
-                        ctx.globalAlpha = 1;
-                    }
-                });
-            });
-
-            requestAnimationFrame(animate);
-        };
-
-        animate();
-
-        const handleResize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-30" />;
-};
 
 const HomePage = () => {
     const { setVisible } = useWalletModal();
@@ -148,7 +64,7 @@ const HomePage = () => {
                             >
                                 {/* Animated shine effect */}
                                 <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-                                
+
                                 <span className="relative flex items-center justify-center gap-2 text-black">
                                     Launch Dashboard
                                     <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
@@ -175,7 +91,7 @@ const HomePage = () => {
                         <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm hover:border-[#DC1FFF]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#DC1FFF]/20 relative overflow-hidden">
                             {/* Hover gradient effect */}
                             <div className="absolute inset-0 bg-linear-to-br from-[#DC1FFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
+
                             <div className="relative z-10">
                                 <div className="w-12 h-12 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#DC1FFF]/50">
                                     <Sparkles className="w-6 h-6 text-black" />
@@ -192,7 +108,7 @@ const HomePage = () => {
                         {/* Feature 2 */}
                         <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#03E1FF]/20 rounded-2xl backdrop-blur-sm hover:border-[#03E1FF]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#03E1FF]/20 relative overflow-hidden">
                             <div className="absolute inset-0 bg-linear-to-br from-[#03E1FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
+
                             <div className="relative z-10">
                                 <div className="w-12 h-12 bg-linear-to-br from-[#03E1FF] to-[#00FFA3] rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#03E1FF]/50">
                                     <Shield className="w-6 h-6 text-black" />
@@ -209,7 +125,7 @@ const HomePage = () => {
                         {/* Feature 3 */}
                         <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#00FFA3]/20 rounded-2xl backdrop-blur-sm hover:border-[#00FFA3]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#00FFA3]/20 relative overflow-hidden">
                             <div className="absolute inset-0 bg-linear-to-br from-[#00FFA3]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            
+
                             <div className="relative z-10">
                                 <div className="w-12 h-12 bg-linear-to-br from-[#00FFA3] to-[#03E1FF] rounded-lg flex items-center justify-center mb-4 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#00FFA3]/50">
                                     <Zap className="w-6 h-6 text-black" />

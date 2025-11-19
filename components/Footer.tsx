@@ -5,8 +5,8 @@ const Footer = () => {
     return (
         <footer className="bg-black/80 backdrop-blur-lg text-white py-8 sm:py-12 lg:py-16 border-t border-[#DC1FFF]/20 relative overflow-hidden">
             {/* Animated gradient line at top */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
-            
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
+
             {/* Gradient orbs */}
             <div className="absolute top-0 left-10 w-64 h-64 bg-[#DC1FFF]/10 rounded-full blur-[100px] animate-pulse" />
             <div className="absolute bottom-0 right-10 w-64 h-64 bg-[#00FFA3]/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
@@ -71,15 +71,21 @@ const Footer = () => {
                         <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-white">Learn</h4>
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/features" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
+                                <Link href="/" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
                                     <span className="w-0 h-0.5 bg-[#00FFA3] group-hover:w-2 transition-all duration-300" />
-                                    Features
+                                    Home
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
+                                <Link href="/documentation" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
                                     <span className="w-0 h-0.5 bg-[#00FFA3] group-hover:w-2 transition-all duration-300" />
-                                    About
+                                    Documentation
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/playground" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
+                                    <span className="w-0 h-0.5 bg-[#00FFA3] group-hover:w-2 transition-all duration-300" />
+                                    Playground
                                 </Link>
                             </li>
                         </ul>
@@ -87,7 +93,7 @@ const Footer = () => {
 
                     <div className="sm:col-span-2 lg:col-span-2">
                         <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-white">Company</h4>
-                        <ul className="grid grid-cols-2 sm:grid-cols-1 gap-2">
+                        <ul className="space-y-2">
                             <li>
                                 <Link href="/features" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
                                     <span className="w-0 h-0.5 bg-[#00FFA3] group-hover:w-2 transition-all duration-300" />
@@ -106,12 +112,7 @@ const Footer = () => {
                                     Contact
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/privacy" className="group text-sm sm:text-base text-slate-400 hover:text-[#00FFA3] transition-all duration-300 flex items-center gap-2">
-                                    <span className="w-0 h-0.5 bg-[#00FFA3] group-hover:w-2 transition-all duration-300" />
-                                    Privacy Policy
-                                </Link>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -121,7 +122,7 @@ const Footer = () => {
                         <div className="text-center md:text-left flex items-center gap-2">
                             <span>© {new Date().getFullYear()} DappPay. All rights reserved.</span>
                             <span className="hidden sm:inline">•</span>
-                            <span className="hidden sm:inline flex items-center gap-1">
+                            <span className="hidden sm:flex items-center gap-1">
                                 Made with <Heart className="w-3 h-3 text-red-500 animate-pulse" /> by DappMentors
                             </span>
                         </div>

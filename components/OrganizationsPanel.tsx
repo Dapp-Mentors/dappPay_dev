@@ -1,6 +1,6 @@
 import { X, DollarSign, Users, TrendingUp, Building2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
-import { PayrollSummary, WorkerSummary } from '@/utils/interface';
+import { PayrollSummary } from '@/utils/interface';
 
 interface OrganizationsPanelProps {
     organizations: PayrollSummary[];
@@ -34,7 +34,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({
             />
 
             {/* Panel */}
-            <div className="fixed lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 min-h-[50vh] max-h-[85vh] lg:max-h-[80vh] z-40 flex flex-col bg-linear-to-br from-slate-900/95 to-slate-800/80 lg:from-slate-900/50 lg:to-slate-800/30 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl animate-slide-up lg:animate-none relative group">
+            <div className="lg:relative inset-x-0 bottom-0 lg:inset-auto lg:w-1/3 min-h-[50vh] max-h-[85vh] lg:max-h-[80vh] z-40 flex flex-col bg-linear-to-br from-slate-900/95 to-slate-800/80 lg:from-slate-900/50 lg:to-slate-800/30 border-t lg:border border-[#DC1FFF]/20 rounded-t-2xl lg:rounded-2xl backdrop-blur-md overflow-hidden shadow-2xl animate-slide-up lg:animate-none relative group">
                 {/* Animated border glow */}
                 <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-[#DC1FFF]/20 via-[#00FFA3]/20 to-[#03E1FF]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
 
