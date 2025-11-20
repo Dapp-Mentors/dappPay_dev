@@ -30,7 +30,7 @@ const Header = () => {
                 : 'bg-black/60 backdrop-blur-lg border-b border-[#DC1FFF]/10'
             }`}>
             {/* Animated gradient line at top */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-[#DC1FFF] to-transparent animate-pulse" />
 
             <div className="max-w-[90vw] lg:max-w-[75vw] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                 <div className="flex items-center gap-2 sm:gap-4">

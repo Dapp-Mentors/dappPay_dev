@@ -3,15 +3,34 @@ import { ChevronRight, Sparkles, Shield, Zap, Cpu, Lock, TrendingUp } from 'luci
 import Header from './Header';
 import Footer from './Footer';
 import ParticleBackground from './ParticleBackground';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect } from 'react';
 
 
 
 const HomePage = () => {
     const { setVisible } = useWalletModal();
+    const { connected, publicKey } = useWallet();
+    const router = useRouter();
 
-    const handleLaunchDashboard = () => {
+    // Navigate to dashboard when we detect a successful connection
+    useEffect(() => {
+        if (connected && publicKey) {
+            router.push('/dashboard');
+        }
+    }, [connected, publicKey, router]);
+
+    const handleLaunchDashboard = useCallback(async () => {
+        if (connected) {
+            // Already connected → go straight to dashboard
+            router.push('/dashboard');
+            return;
+        }
+
+        // Not connected → show the wallet modal
         setVisible(true);
-    };
+    }, [connected, setVisible, router /* , connect */]);
 
     return (
         <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black relative overflow-hidden">
