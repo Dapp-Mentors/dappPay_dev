@@ -1,32 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
-import {
-    getProvider,
-    getProviderReadonly,
-    createOrganization,
-    addWorker,
-    fundTreasury,
-    processPayroll,
-    withdrawFromTreasury,
-    fetchUserOrganizations,
-    fetchAllOrganizations,
-    fetchOrganizationDetails,
-    fetchOrganizationWorkers,
-    fetchWorkerDetails,
-    fetchWorkersByWallet,
-    checkPayrollDue,
-    getOrganizationBalance,
-    calculateTotalPayrollCost,
-    deriveOrganizationPDA,
-    deriveWorkerPDA,
-} from '@/services/blockchain';
 import { Play, Zap, Shuffle, Trash2, Copy, Check } from 'lucide-react';
 import Header from '@/components/Header';
 import ParticleBackground from '@/components/ParticleBackground';
 import Footer from '@/components/Footer';
+
 interface TestData {
     orgName: string;
     workerAddress: string;
@@ -45,7 +24,6 @@ interface Log {
 }
 
 const Page: React.FC = () => {
-    const { publicKey, signTransaction } = useWallet();
     const [logs, setLogs] = useState<Log[]>([]);
     const [loading, setLoading] = useState<string | null>(null);
     const [copied, setCopied] = useState<string | null>(null);
@@ -100,24 +78,15 @@ const Page: React.FC = () => {
     };
 
     const testCreateOrganization = async () => {
-        if (!publicKey || !signTransaction) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
-
         setLoading('createOrg');
         try {
-            const program = getProvider(publicKey, signTransaction);
-            if (!program) throw new Error('Failed to get program');
-
             addLog(`Creating organization: ${testData.orgName}`, 'info');
-            const tx = await createOrganization(program, publicKey, testData.orgName);
+            // Dummy PDA generation
+            const dummyOrgPda = `dummyOrgPda_${Math.random().toString(36).substring(7)}`;
+            setTestData(prev => ({ ...prev, selectedOrgPda: dummyOrgPda }));
 
-            const [orgPda] = deriveOrganizationPDA(publicKey, testData.orgName);
-            setTestData(prev => ({ ...prev, selectedOrgPda: orgPda.toBase58() }));
-
-            addLog(`Organization created! TX: ${tx}`, 'success');
-            addLog(`Org PDA: ${orgPda.toBase58()}`, 'info');
+            addLog(`Organization created! TX: dummyTxSignature`, 'success');
+            addLog(`Org PDA: ${dummyOrgPda}`, 'info');
         } catch (error) {
             handleError(error, 'Create Organization');
         } finally {
@@ -126,10 +95,6 @@ const Page: React.FC = () => {
     };
 
     const testAddWorker = async () => {
-        if (!publicKey || !signTransaction) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
         if (!testData.selectedOrgPda) {
             addLog('Please create an organization first or enter Org PDA', 'error');
             return;
@@ -137,30 +102,15 @@ const Page: React.FC = () => {
 
         setLoading('addWorker');
         try {
-            const program = getProvider(publicKey, signTransaction);
-            if (!program) throw new Error('Failed to get program');
-
-            const workerPubkey = testData.workerAddress
-                ? new PublicKey(testData.workerAddress)
-                : PublicKey.unique();
+            const workerPubkey = testData.workerAddress || `dummyWorker_${Math.random().toString(36).substring(7)}`;
 
             addLog(`Adding worker with salary ${testData.salary} SOL`, 'info');
-            const tx = await addWorker(
-                program,
-                publicKey,
-                testData.selectedOrgPda,
-                workerPubkey,
-                parseFloat(testData.salary)
-            );
+            // Dummy worker PDA
+            const dummyWorkerPda = `dummyWorkerPda_${Math.random().toString(36).substring(7)}`;
+            setTestData(prev => ({ ...prev, selectedWorkerPda: dummyWorkerPda }));
 
-            const [workerPda] = deriveWorkerPDA(
-                new PublicKey(testData.selectedOrgPda),
-                workerPubkey
-            );
-            setTestData(prev => ({ ...prev, selectedWorkerPda: workerPda.toBase58() }));
-
-            addLog(`Worker added! TX: ${tx}`, 'success');
-            addLog(`Worker PDA: ${workerPda.toBase58()}`, 'info');
+            addLog(`Worker added! TX: dummyTxSignature`, 'success');
+            addLog(`Worker PDA: ${dummyWorkerPda}`, 'info');
         } catch (error) {
             handleError(error, 'Add Worker');
         } finally {
@@ -169,10 +119,6 @@ const Page: React.FC = () => {
     };
 
     const testFundTreasury = async () => {
-        if (!publicKey || !signTransaction) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
         if (!testData.selectedOrgPda) {
             addLog('Please create an organization first or enter Org PDA', 'error');
             return;
@@ -180,18 +126,9 @@ const Page: React.FC = () => {
 
         setLoading('fundTreasury');
         try {
-            const program = getProvider(publicKey, signTransaction);
-            if (!program) throw new Error('Failed to get program');
-
             addLog(`Funding treasury with ${testData.fundAmount} SOL`, 'info');
-            const tx = await fundTreasury(
-                program,
-                publicKey,
-                testData.selectedOrgPda,
-                parseFloat(testData.fundAmount)
-            );
 
-            addLog(`Treasury funded! TX: ${tx}`, 'success');
+            addLog(`Treasury funded! TX: dummyTxSignature`, 'success');
         } catch (error) {
             handleError(error, 'Fund Treasury');
         } finally {
@@ -200,10 +137,6 @@ const Page: React.FC = () => {
     };
 
     const testProcessPayroll = async () => {
-        if (!publicKey || !signTransaction) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
         if (!testData.selectedOrgPda) {
             addLog('Please create an organization first or enter Org PDA', 'error');
             return;
@@ -211,13 +144,9 @@ const Page: React.FC = () => {
 
         setLoading('processPayroll');
         try {
-            const program = getProvider(publicKey, signTransaction);
-            if (!program) throw new Error('Failed to get program');
-
             addLog('Processing payroll for all workers...', 'info');
-            const tx = await processPayroll(program, publicKey, testData.selectedOrgPda);
 
-            addLog(`Payroll processed! TX: ${tx}`, 'success');
+            addLog(`Payroll processed! TX: dummyTxSignature`, 'success');
         } catch (error) {
             handleError(error, 'Process Payroll');
         } finally {
@@ -226,10 +155,6 @@ const Page: React.FC = () => {
     };
 
     const testWithdraw = async () => {
-        if (!publicKey || !signTransaction) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
         if (!testData.selectedOrgPda) {
             addLog('Please create an organization first or enter Org PDA', 'error');
             return;
@@ -237,18 +162,9 @@ const Page: React.FC = () => {
 
         setLoading('withdraw');
         try {
-            const program = getProvider(publicKey, signTransaction);
-            if (!program) throw new Error('Failed to get program');
-
             addLog(`Withdrawing ${testData.withdrawAmount} SOL from treasury`, 'info');
-            const tx = await withdrawFromTreasury(
-                program,
-                publicKey,
-                testData.selectedOrgPda,
-                parseFloat(testData.withdrawAmount)
-            );
 
-            addLog(`Withdrawal successful! TX: ${tx}`, 'success');
+            addLog(`Withdrawal successful! TX: dummyTxSignature`, 'success');
         } catch (error) {
             handleError(error, 'Withdraw from Treasury');
         } finally {
@@ -257,19 +173,17 @@ const Page: React.FC = () => {
     };
 
     const testFetchUserOrgs = async () => {
-        if (!publicKey) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
-
         setLoading('fetchUserOrgs');
         try {
-            const program = getProviderReadonly();
             addLog('Fetching your organizations...', 'info');
-            const orgs = await fetchUserOrganizations(program, publicKey);
+            // Dummy data
+            const dummyOrgs = [
+                { name: 'Dummy Org 1', treasury: 100, workersCount: 5 },
+                { name: 'Dummy Org 2', treasury: 200, workersCount: 3 },
+            ];
 
-            addLog(`Found ${orgs.length} organization(s)`, 'success');
-            orgs.forEach((org, i) => {
+            addLog(`Found ${dummyOrgs.length} organization(s)`, 'success');
+            dummyOrgs.forEach((org, i) => {
                 addLog(`${i + 1}. ${org.name} - Treasury: ${org.treasury} SOL - Workers: ${org.workersCount}`, 'info');
             });
         } catch (error) {
@@ -282,12 +196,15 @@ const Page: React.FC = () => {
     const testFetchAllOrgs = async () => {
         setLoading('fetchAllOrgs');
         try {
-            const program = getProviderReadonly();
             addLog('Fetching all organizations...', 'info');
-            const orgs = await fetchAllOrganizations(program);
+            // Dummy data
+            const dummyOrgs = [
+                { name: 'Dummy Org A', treasury: 150 },
+                { name: 'Dummy Org B', treasury: 250 },
+            ];
 
-            addLog(`Found ${orgs.length} total organization(s)`, 'success');
-            orgs.forEach((org, i) => {
+            addLog(`Found ${dummyOrgs.length} total organization(s)`, 'success');
+            dummyOrgs.forEach((org, i) => {
                 addLog(`${i + 1}. ${org.name} - Treasury: ${org.treasury} SOL`, 'info');
             });
         } catch (error) {
@@ -305,13 +222,17 @@ const Page: React.FC = () => {
 
         setLoading('fetchOrgDetails');
         try {
-            const program = getProviderReadonly();
             addLog(`Fetching details for org...`, 'info');
-            const org = await fetchOrganizationDetails(program, testData.selectedOrgPda);
+            // Dummy data
+            const dummyOrg = {
+                name: 'Dummy Org',
+                treasury: 150,
+                workersCount: 4,
+            };
 
-            addLog(`Organization: ${org.name}`, 'success');
-            addLog(`Treasury: ${org.treasury} SOL`, 'info');
-            addLog(`Workers Count: ${org.workersCount}`, 'info');
+            addLog(`Organization: ${dummyOrg.name}`, 'success');
+            addLog(`Treasury: ${dummyOrg.treasury} SOL`, 'info');
+            addLog(`Workers Count: ${dummyOrg.workersCount}`, 'info');
         } catch (error) {
             handleError(error, 'Fetch Organization Details');
         } finally {
@@ -327,12 +248,15 @@ const Page: React.FC = () => {
 
         setLoading('fetchOrgWorkers');
         try {
-            const program = getProviderReadonly();
             addLog(`Fetching workers...`, 'info');
-            const workers = await fetchOrganizationWorkers(program, testData.selectedOrgPda);
+            // Dummy data
+            const dummyWorkers = [
+                { salary: 50 },
+                { salary: 60 },
+            ];
 
-            addLog(`Found ${workers.length} worker(s)`, 'success');
-            workers.forEach((worker, i) => {
+            addLog(`Found ${dummyWorkers.length} worker(s)`, 'success');
+            dummyWorkers.forEach((worker, i) => {
                 addLog(`${i + 1}. Salary: ${worker.salary} SOL`, 'info');
             });
         } catch (error) {
@@ -350,12 +274,15 @@ const Page: React.FC = () => {
 
         setLoading('fetchWorkerDetails');
         try {
-            const program = getProviderReadonly();
             addLog(`Fetching worker details...`, 'info');
-            const worker = await fetchWorkerDetails(program, testData.selectedWorkerPda);
+            // Dummy data
+            const dummyWorker = {
+                salary: 50,
+                lastPaidCycle: Date.now() / 1000 - 86400, // 1 day ago
+            };
 
-            addLog(`Salary: ${worker.salary} SOL`, 'success');
-            addLog(`Last Paid: ${new Date(worker.lastPaidCycle).toLocaleString()}`, 'info');
+            addLog(`Salary: ${dummyWorker.salary} SOL`, 'success');
+            addLog(`Last Paid: ${new Date(dummyWorker.lastPaidCycle * 1000).toLocaleString()}`, 'info');
         } catch (error) {
             handleError(error, 'Fetch Worker Details');
         } finally {
@@ -364,19 +291,17 @@ const Page: React.FC = () => {
     };
 
     const testFetchWorkersByWallet = async () => {
-        if (!publicKey) {
-            addLog('Please connect your wallet first', 'error');
-            return;
-        }
-
         setLoading('fetchWorkersByWallet');
         try {
-            const program = getProviderReadonly();
             addLog(`Fetching your worker records...`, 'info');
-            const workers = await fetchWorkersByWallet(program, publicKey);
+            // Dummy data
+            const dummyWorkers = [
+                { salary: 50 },
+                { salary: 60 },
+            ];
 
-            addLog(`Found ${workers.length} worker record(s)`, 'success');
-            workers.forEach((worker, i) => {
+            addLog(`Found ${dummyWorkers.length} worker record(s)`, 'success');
+            dummyWorkers.forEach((worker, i) => {
                 addLog(`${i + 1}. Salary: ${worker.salary} SOL`, 'info');
             });
         } catch (error) {
@@ -394,12 +319,15 @@ const Page: React.FC = () => {
 
         setLoading('checkPayrollDue');
         try {
-            const program = getProviderReadonly();
             addLog('Checking if payroll is due...', 'info');
-            const result = await checkPayrollDue(program, testData.selectedOrgPda, 'monthly');
+            // Dummy result
+            const dummyResult = {
+                due: true,
+                workers: [{}, {}], // 2 workers
+            };
 
-            if (result.due) {
-                addLog(`Payroll is DUE! ${result.workers.length} worker(s) need payment`, 'success');
+            if (dummyResult.due) {
+                addLog(`Payroll is DUE! ${dummyResult.workers.length} worker(s) need payment`, 'success');
             } else {
                 addLog('Payroll is not due yet', 'info');
             }
@@ -418,11 +346,11 @@ const Page: React.FC = () => {
 
         setLoading('getOrgBalance');
         try {
-            const program = getProviderReadonly();
             addLog('Fetching organization balance...', 'info');
-            const balance = await getOrganizationBalance(program, testData.selectedOrgPda);
+            // Dummy balance
+            const dummyBalance = 150;
 
-            addLog(`Treasury Balance: ${balance} SOL`, 'success');
+            addLog(`Treasury Balance: ${dummyBalance} SOL`, 'success');
         } catch (error) {
             handleError(error, 'Get Organization Balance');
         } finally {
@@ -438,11 +366,11 @@ const Page: React.FC = () => {
 
         setLoading('calculatePayrollCost');
         try {
-            const program = getProviderReadonly();
             addLog('Calculating total payroll cost...', 'info');
-            const cost = await calculateTotalPayrollCost(program, testData.selectedOrgPda);
+            // Dummy cost
+            const dummyCost = 110;
 
-            addLog(`Total Monthly Payroll Cost: ${cost} SOL`, 'success');
+            addLog(`Total Monthly Payroll Cost: ${dummyCost} SOL`, 'success');
         } catch (error) {
             handleError(error, 'Calculate Payroll Cost');
         } finally {

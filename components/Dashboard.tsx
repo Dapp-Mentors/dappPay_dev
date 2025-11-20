@@ -1,13 +1,11 @@
 // app/components/Dashboard.tsx
 "use client"
 import { useState, useEffect } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 import Header from './Header';
 import ChatPanel from './ChatPanel';
 import OrganizationsPanel from './OrganizationsPanel';
 import { Menu } from 'lucide-react';
 import { Message, PayrollSummary, WorkerSummary } from '@/utils/interface';
-import { blockchainMcpTools, setWalletContext } from '@/lib/payroll-mcp-tools';
 import Footer from './Footer';
 
 type ChatMessage = Message & {
@@ -47,75 +45,75 @@ interface JsonSchemaProperty {
   enum?: string[];
 }
 
-interface ZodDef {
-  typeName: string;
-  shape?: (() => Record<string, unknown>) | Record<string, unknown>;
-  description?: string;
-  values?: string[] | Set<string>;
-  innerType?: { _def: ZodDef };
-}
+// Dummy tools for teaching - replace real blockchain calls with static data
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const dummyBlockchainMcpTools = {
+  fetch_user_organizations: {
+    description: 'Fetch user organizations',
+    execute: async (_args: Record<string, unknown>, _context: { toolCallId: string; messages: unknown[] }) => ({
+      success: true,
+      organizations: [
+        { name: 'Dummy Org 1', publicKey: 'dummyPda1', treasury: 100, workersCount: 5 },
+        { name: 'Dummy Org 2', publicKey: 'dummyPda2', treasury: 200, workersCount: 3 },
+      ],
+    }),
+  },
+  fetch_organization_details: {
+    description: 'Fetch organization details',
+    execute: async (args: { orgPda?: string }, _context: { toolCallId: string; messages: unknown[] }) => ({
+      success: true,
+      organization: {
+        name: args.orgPda ? `Dummy Org for ${args.orgPda}` : 'Unknown',
+        treasury: 150,
+        workersCount: 4,
+        workers: [
+          { publicKey: 'worker1', salary: 50, lastPaid: 1699999999 },
+          { publicKey: 'worker2', salary: 60, lastPaid: 1700000000 },
+        ],
+      },
+    }),
+  },
+  create_organization: {
+    description: 'Create organization',
+    execute: async (args: { name: string }, _context: { toolCallId: string; messages: unknown[] }) => ({
+      success: true,
+      message: `Dummy organization ${args.name} created`,
+      orgPda: 'dummyNewOrgPda',
+    }),
+  },
+  // Add dummies for other tools similarly...
+  add_worker: {
+    description: 'Add worker',
+    execute: async (_args: Record<string, unknown>, _context: { toolCallId: string; messages: unknown[] }) => ({ success: true, message: 'Dummy worker added' })
+  },
+  fund_treasury: {
+    description: 'Fund treasury',
+    execute: async (_args: Record<string, unknown>, _context: { toolCallId: string; messages: unknown[] }) => ({ success: true, message: 'Dummy treasury funded' })
+  },
+  process_payroll: {
+    description: 'Process payroll',
+    execute: async (_args: Record<string, unknown>, _context: { toolCallId: string; messages: unknown[] }) => ({ success: true, message: 'Dummy payroll processed' })
+  },
+  withdraw_from_treasury: {
+    description: 'Withdraw from treasury',
+    execute: async (_args: Record<string, unknown>, _context: { toolCallId: string; messages: unknown[] }) => ({ success: true, message: 'Dummy withdrawal' })
+  },
+};
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
-interface ZodType {
-  _def: ZodDef;
-  [key: string]: unknown;
-}
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getOpenAITools = () => {
-  return Object.entries(blockchainMcpTools).map(([name, tool]) => {
+  return Object.entries(dummyBlockchainMcpTools).map(([name, tool]) => {
     const properties: Record<string, JsonSchemaProperty> = {};
     const required: string[] = [];
 
-    try {
-      const schema = tool.inputSchema;
-
-      if (schema && typeof schema === 'object' && '_def' in schema) {
-        const schemaObj = schema as unknown as ZodType;
-        const def = schemaObj._def;
-
-        if (def.typeName === 'ZodObject' && def.shape) {
-          const shape = typeof def.shape === 'function' ? def.shape() : def.shape;
-
-          Object.entries(shape).forEach(([key, zodType]) => {
-            if (!zodType || typeof zodType !== 'object' || !('_def' in zodType)) {
-              return;
-            }
-
-            const innerDef = (zodType as ZodType)._def;
-            let actualDef = innerDef;
-            let isOptional = false;
-
-            if (innerDef.typeName === 'ZodOptional') {
-              isOptional = true;
-              actualDef = innerDef.innerType?._def || innerDef;
-            }
-
-            let type: JsonSchemaProperty['type'] = 'string';
-            if (actualDef.typeName === 'ZodString') type = 'string';
-            else if (actualDef.typeName === 'ZodNumber') type = 'number';
-            else if (actualDef.typeName === 'ZodBoolean') type = 'boolean';
-            else if (actualDef.typeName === 'ZodObject') type = 'object';
-            else if (actualDef.typeName === 'ZodArray') type = 'array';
-
-            properties[key] = {
-              type,
-              description: actualDef.description || innerDef.description || `${key} parameter`,
-            };
-
-            if (actualDef.typeName === 'ZodEnum' && actualDef.values) {
-              properties[key].enum = Array.isArray(actualDef.values)
-                ? actualDef.values
-                : Array.from(actualDef.values);
-            }
-
-            if (!isOptional) {
-              required.push(key);
-            }
-          });
-        }
-      }
-    } catch (error) {
-      console.error(`Error parsing schema for ${name}:`, error);
+    // Dummy schema parsing - simplified for teaching
+    // In real code, this would parse Zod schemas, but here we hardcode dummies
+    if (name === 'create_organization') {
+      properties['name'] = { type: 'string', description: 'Organization name' };
+      required.push('name');
     }
+    // Add for others...
 
     return {
       type: 'function' as const,
@@ -173,18 +171,6 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
   if ('message' in outputData && outputData.message) {
     lines.push(`📝 ${outputData.message}`);
     lines.push('');
-  }
-
-  if ('signature' in outputData && outputData.signature) {
-    lines.push(`🔗 **Transaction ID**: \`${outputData.signature}\``);
-  }
-
-  if ('workerPda' in outputData && outputData.workerPda) {
-    lines.push(`👤 **Worker Address**: \`${outputData.workerPda}\``);
-  }
-
-  if ('orgPda' in outputData && outputData.orgPda) {
-    lines.push(`🏢 **Organization Address**: \`${outputData.orgPda}\``);
   }
 
   if ('signature' in outputData || 'workerPda' in outputData || 'orgPda' in outputData) {
@@ -268,11 +254,11 @@ const Dashboard = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { publicKey, signTransaction } = useWallet();
+  const dummyPublicKey = 'dummyPublicKey'; // Dummy public key for teaching
 
   // Initialize messages with API key requirement check
   useEffect(() => {
-    const hasEnvKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+    const hasEnvKey = true; // Dummy: Assume key is set for teaching
     setApiKeySet(hasEnvKey);
 
     if (hasEnvKey) {
@@ -308,22 +294,15 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    setWalletContext(publicKey || null, signTransaction || null);
-  }, [publicKey, signTransaction]);
-
-  useEffect(() => {
     const loadOrganizations = async () => {
-      const tool = blockchainMcpTools.fetch_user_organizations;
+      const tool = dummyBlockchainMcpTools.fetch_user_organizations;
       if (!tool || !tool.execute) {
         console.error('fetch_user_organizations tool not available');
         return;
       }
 
       try {
-        const result = await tool.execute!(
-          {},
-          { toolCallId: 'load-orgs', messages: [] }
-        );
+        const result = await tool.execute({}, { toolCallId: 'load-orgs', messages: [] });
 
         if (typeof result === 'object' && result !== null && 'success' in result) {
           if (result.success && Array.isArray(result.organizations)) {
@@ -346,10 +325,8 @@ const Dashboard = () => {
       }
     };
 
-    if (publicKey) {
-      loadOrganizations();
-    }
-  }, [publicKey]);
+    loadOrganizations();
+  }, []);
 
   const handleApiKeySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -363,10 +340,6 @@ const Dashboard = () => {
       };
       setMessages((prev) => [...prev, assistantMessage]);
     }
-  };
-
-  const getActiveApiKey = () => {
-    return userApiKey || process.env.NEXT_PUBLIC_OPENAI_API_KEY || '';
   };
 
   const generateResponse = async (userInput: string) => {
@@ -405,7 +378,7 @@ const Dashboard = () => {
         5. Be conversational and friendly in your responses
         6. After tools execute, provide a brief, natural summary - the tool results are already formatted nicely
 
-        Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
+        Available tools: ${Object.keys(dummyBlockchainMcpTools).join(', ')}`,
       };
 
       const conversationMessages: OpenAIMessage[] = [
@@ -420,35 +393,23 @@ const Dashboard = () => {
         }
       ];
 
-      const tools = getOpenAITools();
       let fullResponse = '';
       let iterations = 0;
       const maxIterations = 5;
-      const activeApiKey = getActiveApiKey();
 
       while (iterations < maxIterations) {
         iterations++;
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${activeApiKey}`,
+        // Dummy AI response simulation instead of real fetch
+        const dummyChoice: OpenAIResponse['choices'][number] = {
+          message: {
+            role: 'assistant',
+            content: null,
+            tool_calls: userInput.includes('create') ? [{ id: 'dummy1', type: 'function', function: { name: 'create_organization', arguments: '{"name":"DummyOrg"}' } }] : [],
           },
-          body: JSON.stringify({
-            model: 'gpt-4o',
-            messages: conversationMessages,
-            tools,
-            tool_choice: 'auto',
-          }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(`AI API failed (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
-        }
-
-        const data: OpenAIResponse = await response.json();
+          finish_reason: 'tool_calls',
+        };
+        const data: OpenAIResponse = { choices: [dummyChoice] };
         const choice = data.choices[0];
 
         if (!choice || !choice.message) {
@@ -474,12 +435,12 @@ const Dashboard = () => {
 
             let toolOutput: unknown;
             try {
-              const tool = blockchainMcpTools[toolName as keyof typeof blockchainMcpTools];
+              const tool = dummyBlockchainMcpTools[toolName as keyof typeof dummyBlockchainMcpTools];
               if (!tool || !tool.execute) {
                 throw new Error(`Unknown tool: ${toolName}`);
               }
 
-              toolOutput = await tool.execute!(toolArgs, {
+              toolOutput = await tool.execute(toolArgs, {
                 toolCallId: toolCall.id,
                 messages: []
               });
@@ -530,23 +491,21 @@ const Dashboard = () => {
       };
       setMessages((prev) => [...prev, assistantMessage]);
 
-      if (publicKey) {
-        const tool = blockchainMcpTools.fetch_user_organizations;
-        const result = await tool.execute!({}, { toolCallId: 'refresh', messages: [] });
-        if (result && typeof result === 'object' && 'success' in result && result.success) {
-          const mappedOrgs: PayrollSummary[] = (result.organizations as unknown[]).map((org: unknown) => {
-            const orgData = org as Record<string, unknown>;
-            const workerCount = Number(orgData.workersCount || 0);
-            return {
-              id: String(orgData.publicKey || orgData.name || ''),
-              orgName: String(orgData.name || 'Unknown'),
-              treasury: Number(orgData.treasury || 0),
-              workers: Array.from({ length: workerCount }, () => ({}) as WorkerSummary),
-              createdAt: Number(orgData.createdAt || 0),
-            };
-          });
-          setOrganizations(mappedOrgs);
-        }
+      const tool = dummyBlockchainMcpTools.fetch_user_organizations;
+      const result = await tool.execute({}, { toolCallId: 'refresh', messages: [] });
+      if (result && typeof result === 'object' && 'success' in result && result.success) {
+        const mappedOrgs: PayrollSummary[] = (result.organizations as unknown[]).map((org: unknown) => {
+          const orgData = org as Record<string, unknown>;
+          const workerCount = Number(orgData.workersCount || 0);
+          return {
+            id: String(orgData.publicKey || orgData.name || ''),
+            orgName: String(orgData.name || 'Unknown'),
+            treasury: Number(orgData.treasury || 0),
+            workers: Array.from({ length: workerCount }, () => ({}) as WorkerSummary),
+            createdAt: Number(orgData.createdAt || 0),
+          };
+        });
+        setOrganizations(mappedOrgs);
       }
 
     } catch (error) {
@@ -587,7 +546,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black pt-16 sm:pt-20">
       <Header />
 
-      {!publicKey && (
+      {!dummyPublicKey && (
         <div className="fixed top-16 sm:top-20 right-2 sm:right-4 z-40 p-3 sm:p-4 bg-slate-800 text-white rounded-lg text-xs sm:text-sm max-w-[90vw] sm:max-w-none">
           <p>Connect your wallet to enable transactions.</p>
         </div>
@@ -600,7 +559,7 @@ const Dashboard = () => {
             input={input}
             isLoading={isLoading || !apiKeySet}
             isPayrollOpen={isPayrollOpen}
-            publicKey={publicKey}
+            publicKey={dummyPublicKey}
             onInputChange={setInput}
             onSubmit={handleSubmit}
             apiKeySet={apiKeySet}

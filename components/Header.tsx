@@ -1,6 +1,6 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { Zap, Sparkles, Menu } from 'lucide-react';
+import { Zap, Sparkles, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -80,7 +80,7 @@ const Header = () => {
                     {connected ? (
                         <button onClick={handleDisconnect} className="focus:outline-none">
                             <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700/50 backdrop-blur-sm hover:border-[#00FFA3]/50 transition-all duration-300 group">
-                                <div className="w-2 h-2 rounded-full bg-[#00FFA3] animate-pulse shadow-lg shadow-[#00FFA3]/50" />
+                                <X className="w-4 h-4 rounded-full animate-pulse shadow-lg shadow-[#00FFA3]/50" />
                                 <span className="text-xs sm:text-sm text-slate-400">Connected: </span>
                                 <span className="text-xs sm:text-sm text-white font-mono group-hover:text-[#00FFA3] transition-colors duration-300">{address}</span>
                             </div>
