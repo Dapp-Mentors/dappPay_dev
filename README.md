@@ -60,7 +60,7 @@ That’s it. The AI remembers context and executes everything on-chain.
 
 ## Tech Stack
 
-- **Frontend** – Next.js 14 (App Router) + TypeScript + Tailwind
+- **Frontend** – Next.js 16 (App Router) + TypeScript + Tailwind
 - **Blockchain** – Solana + Anchor (Rust) smart contracts
 - **AI Layer** – Bring-your-own OpenAI key (client-side only)
 - **Wallet** – Wallet Adapter + Phantom/Solflare support
@@ -72,7 +72,7 @@ That’s it. The AI remembers context and executes everything on-chain.
 ├── anchor/                  # Solana program (Rust + Anchor)
 │   └── programs/
 │       └── payroll_program/ # create_org, add_worker, fund, payroll, withdraw
-├── app/                     # Next.js 14 pages
+├── app/                     # Next.js 16 pages
 │   ├── dashboard/page.tsx   # Main AI chat + org panel
 │   ├── privacy/page.tsx     # Privacy-first policy
 │   └── test/page.tsx        # Manual transaction tester
