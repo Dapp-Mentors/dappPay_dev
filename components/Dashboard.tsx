@@ -132,11 +132,9 @@ const getOpenAITools = () => {
   });
 };
 
-// Helper function to format tool responses beautifully with markdown
 const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>, toolOutput: unknown): string => {
   const lines: string[] = [];
 
-  // Parse the tool output
   let outputData: Record<string, unknown> = {};
   if (typeof toolOutput === 'string') {
     try {
@@ -148,7 +146,6 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     outputData = toolOutput as Record<string, unknown>;
   }
 
-  // Format based on success or error
   if ('error' in outputData) {
     lines.push('');
     lines.push(`### ❌ Error`);
@@ -169,38 +166,31 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     return lines.join('\n');
   }
 
-  // Format successful responses
   lines.push('');
   lines.push('### ✅ Operation Successful');
   lines.push('');
 
-  // Add message if present
   if ('message' in outputData && outputData.message) {
     lines.push(`📝 ${outputData.message}`);
     lines.push('');
   }
 
-  // Add signature if present (transaction ID)
   if ('signature' in outputData && outputData.signature) {
     lines.push(`🔗 **Transaction ID**: \`${outputData.signature}\``);
   }
 
-  // Add worker PDA if present
   if ('workerPda' in outputData && outputData.workerPda) {
     lines.push(`👤 **Worker Address**: \`${outputData.workerPda}\``);
   }
 
-  // Add organization PDA if present
   if ('orgPda' in outputData && outputData.orgPda) {
     lines.push(`🏢 **Organization Address**: \`${outputData.orgPda}\``);
   }
 
-  // Add spacing after addresses
   if ('signature' in outputData || 'workerPda' in outputData || 'orgPda' in outputData) {
     lines.push('');
   }
 
-  // Format organizations list
   if ('organizations' in outputData && Array.isArray(outputData.organizations)) {
     lines.push('### 📋 Your Organizations');
     lines.push('');
@@ -216,7 +206,6 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     });
   }
 
-  // Format organization details
   if ('organization' in outputData && typeof outputData.organization === 'object') {
     const org = outputData.organization as Record<string, unknown>;
     lines.push('### 🏢 Organization Details');
@@ -239,7 +228,6 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     }
   }
 
-  // Format payroll results
   if ('results' in outputData && Array.isArray(outputData.results)) {
     lines.push('### 💰 Payroll Processing Results');
     lines.push('');
@@ -251,7 +239,6 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
     lines.push('');
   }
 
-  // Add any other relevant fields
   const displayedKeys = ['success', 'message', 'signature', 'workerPda', 'orgPda', 'organizations', 'organization', 'results', 'error'];
   const remainingKeys = Object.keys(outputData).filter(key => !displayedKeys.includes(key));
 
@@ -273,33 +260,48 @@ const formatToolResponse = (toolName: string, toolArgs: Record<string, unknown>,
 };
 
 const Dashboard = () => {
-  // Initialize panel state based on screen size
   const [isPayrollOpen, setIsPayrollOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<string | null>(null);
   const [organizations, setOrganizations] = useState<PayrollSummary[]>([]);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'initial',
-      role: 'bot' as const,
-      content: 'Hi! I can help manage your payroll organizations. Ask me to create orgs, add workers, process payroll, or fetch details.',
-      timestamp: new Date(),
-    },
-  ]);
+  const [userApiKey, setUserApiKey] = useState<string>('');
+  const [apiKeySet, setApiKeySet] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { publicKey, signTransaction } = useWallet();
 
-  // Set initial panel state based on screen size
+  // Initialize messages with API key requirement check
+  useEffect(() => {
+    const hasEnvKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+    setApiKeySet(hasEnvKey);
+
+    if (hasEnvKey) {
+      setMessages([
+        {
+          id: 'initial',
+          role: 'bot' as const,
+          content: 'Hi! I can help manage your payroll organizations. Ask me to create orgs, add workers, process payroll, or fetch details.',
+          timestamp: new Date(),
+        },
+      ]);
+    } else {
+      setMessages([
+        {
+          id: 'initial',
+          role: 'bot' as const,
+          content: 'Welcome! To get started, I need your OpenAI API key. Please enter it below to enable chat functionality.',
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  }, []);
+
   useEffect(() => {
     const handleResize = () => {
-      // Open by default on desktop (lg breakpoint: 1024px), closed on mobile
       setIsPayrollOpen(window.innerWidth >= 1024);
     };
 
-    // Set initial state
     handleResize();
-
-    // Add event listener for window resize
     window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
@@ -348,6 +350,24 @@ const Dashboard = () => {
       loadOrganizations();
     }
   }, [publicKey]);
+
+  const handleApiKeySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (userApiKey.trim()) {
+      setApiKeySet(true);
+      const assistantMessage: ChatMessage = {
+        id: Date.now().toString(),
+        role: 'bot' as const,
+        content: 'Great! API key configured. Now I can help manage your payroll organizations. Ask me to create orgs, add workers, process payroll, or fetch details.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+    }
+  };
+
+  const getActiveApiKey = () => {
+    return userApiKey || process.env.NEXT_PUBLIC_OPENAI_API_KEY || '';
+  };
 
   const generateResponse = async (userInput: string) => {
     setIsLoading(true);
@@ -404,6 +424,7 @@ const Dashboard = () => {
       let fullResponse = '';
       let iterations = 0;
       const maxIterations = 5;
+      const activeApiKey = getActiveApiKey();
 
       while (iterations < maxIterations) {
         iterations++;
@@ -412,7 +433,7 @@ const Dashboard = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
+            'Authorization': `Bearer ${activeApiKey}`,
           },
           body: JSON.stringify({
             model: 'gpt-4o',
@@ -475,7 +496,6 @@ const Dashboard = () => {
               toolOutput = { error: (error as Error).message };
             }
 
-            // Use the new formatting function
             const formattedOutput = formatToolResponse(toolName, toolArgs, toolOutput);
             fullResponse += formattedOutput;
 
@@ -578,11 +598,15 @@ const Dashboard = () => {
           <ChatPanel
             messages={messages}
             input={input}
-            isLoading={isLoading}
+            isLoading={isLoading || !apiKeySet}
             isPayrollOpen={isPayrollOpen}
             publicKey={publicKey}
             onInputChange={setInput}
             onSubmit={handleSubmit}
+            apiKeySet={apiKeySet}
+            userApiKey={userApiKey}
+            onApiKeyChange={setUserApiKey}
+            onApiKeySubmit={handleApiKeySubmit}
           />
 
           <OrganizationsPanel
@@ -595,7 +619,6 @@ const Dashboard = () => {
             formatLamports={formatLamports}
           />
 
-          {/* Toggle button - shows when panel is closed */}
           {!isPayrollOpen && (
             <button
               onClick={handleTogglePanel}
