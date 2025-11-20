@@ -1,202 +1,193 @@
 "use client";
 
-import { Sparkles, Shield, Zap, Users, Award, Target, Heart } from 'lucide-react';
+import { Sparkles, Shield, Zap, Users, Award, Target, Heart, BookOpen, Code2, TrendingUp } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ParticleBackground from '@/components/ParticleBackground';
 
 export default function AboutPage() {
-    return (
-        <div className="min-h-screen bg-linear-to-br from-black via-slate-900 to-black relative overflow-hidden">
-            <Header />
-            <ParticleBackground />
+    const colors = {
+        purple: "#DC1FFF",
+        green: "#00FFA3",
+        cyan: "#03E1FF",
+    };
 
-            {/* Gradient Orbs */}
-            <div className="absolute top-20 left-10 w-96 h-96 bg-[#DC1FFF]/20 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#00FFA3]/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+    return (
+        <div className="min-h-screen bg-black text-white">
+            <Header />
 
             {/* Hero Section */}
-            <section className="relative z-10 pt-32 pb-20 px-6">
+            <section className="pt-32 pb-20 px-6">
                 <div className="max-w-7xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-[#DC1FFF]/10 to-[#00FFA3]/10 border border-[#DC1FFF]/20 rounded-full mb-6 backdrop-blur-sm hover:border-[#00FFA3]/40 transition-all duration-300 group cursor-pointer animate-fade-in">
-                        <Sparkles className="w-4 h-4 text-[#DC1FFF] group-hover:animate-spin" />
-                        <span className="text-sm bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] bg-clip-text text-transparent font-medium">
-                            About DappPay
-                        </span>
+                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
+                        <Sparkles className="w-4 h-4" style={{ color: colors.purple }} />
+                        <span className="text-sm font-medium">About DappPay & DappMentors</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-slide-up">
-                        <span className="inline-block bg-linear-to-r from-[#DC1FFF] via-[#00FFA3] to-[#03E1FF] bg-clip-text text-transparent animate-gradient bg-size-[200%_auto]">
-                            Revolutionizing
+
+                    <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                        <span style={{ background: `linear-gradient(to right, ${colors.purple}, ${colors.cyan}, ${colors.green})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                            Empowering Web3
                         </span>
                         <br />
-                        <span className="text-white drop-shadow-[0_0_30px_rgba(220,31,255,0.3)]">Payroll on Solana</span>
+                        <span className="text-white">Through Innovation & Education</span>
                     </h1>
-                    <p className="text-xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                        At DappPay, we&apos;re bridging the gap between traditional payroll systems and the decentralized future. Our mission is to make payroll seamless, secure, and intelligent using AI and Solana&apos;s lightning-fast blockchain.
+
+                    <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                        Built by Darlington Gospel, founder of DappMentors—a trusted Blockchain & AI Academy with 9+ years of experience. DappPay represents a commitment to revolutionizing payroll on Solana while empowering the next generation of Web3 developers.
                     </p>
                 </div>
             </section>
 
-            {/* Mission Section */}
-            <section className="relative z-10 py-20 px-6 bg-slate-900/30 backdrop-blur-sm">
+            {/* Who I Am */}
+            <section className="py-20 px-6 bg-linear-to-b from-black to-zinc-950">
                 <div className="max-w-7xl mx-auto">
+                    <h2 className="text-4xl font-bold text-center mb-16">Who I Am</h2>
                     <div className="grid md:grid-cols-2 gap-16 items-center">
-                        <div className="animate-slide-left">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-12 h-12 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-lg flex items-center justify-center shadow-lg shadow-[#DC1FFF]/50">
-                                    <Target className="w-6 h-6 text-black" />
-                                </div>
-                                <h2 className="text-3xl font-bold text-white">Our Mission</h2>
-                            </div>
-                            <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-                                Empower businesses and teams worldwide to handle payroll with unprecedented ease. By leveraging AI for natural language processing and Solana for instant, low-cost transactions, we eliminate the complexities of traditional finance.
+                        <div className="space-y-6">
+                            <p className="text-lg text-gray-300 leading-relaxed">
+                                I&apos;m Darlington Gospel, a seasoned blockchain developer, AI engineer, and educator with a vision: democratizing Web3 and making decentralized technologies accessible to everyone.
                             </p>
-                            <div className="space-y-4">
-                                <div className="group flex items-center gap-3 p-4 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#00FFA3]/50 transition-all duration-300 backdrop-blur-sm">
-                                    <div className="w-10 h-10 bg-linear-to-br from-[#00FFA3]/20 to-[#00FFA3]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <Zap className="w-5 h-5 text-[#00FFA3]" />
-                                    </div>
-                                    <span className="text-slate-300 group-hover:text-[#00FFA3] transition-colors duration-300">Instant payouts in seconds</span>
-                                </div>
-                                <div className="group flex items-center gap-3 p-4 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#DC1FFF]/50 transition-all duration-300 backdrop-blur-sm">
-                                    <div className="w-10 h-10 bg-linear-to-br from-[#DC1FFF]/20 to-[#DC1FFF]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <Sparkles className="w-5 h-5 text-[#DC1FFF]" />
-                                    </div>
-                                    <span className="text-slate-300 group-hover:text-[#DC1FFF] transition-colors duration-300">AI-driven automation</span>
-                                </div>
-                                <div className="group flex items-center gap-3 p-4 bg-slate-800/30 rounded-lg border border-slate-700/30 hover:border-[#03E1FF]/50 transition-all duration-300 backdrop-blur-sm">
-                                    <div className="w-10 h-10 bg-linear-to-br from-[#03E1FF]/20 to-[#03E1FF]/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <Shield className="w-5 h-5 text-[#03E1FF]" />
-                                    </div>
-                                    <span className="text-slate-300 group-hover:text-[#03E1FF] transition-colors duration-300">Blockchain-secured transparency</span>
-                                </div>
-                            </div>
+                            <p className="text-lg text-gray-300 leading-relaxed">
+                                With over 9 years in blockchain development, smart contract engineering, and technical education, I&apos;ve mentored hundreds through DappMentors and delivered innovative solutions across multiple ecosystems.
+                            </p>
+                            <ul className="space-y-4 pt-6">
+                                {["Smart Contract Development & Auditing", "Full-Stack dApp Development", "Blockchain & AI Education", "Web3 Innovation & Strategy"].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-4">
+                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: i % 2 === 0 ? colors.cyan : colors.green }} />
+                                        <span className="text-gray-300">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                        <div className="relative animate-slide-right">
-                            <div className="relative group">
-                                <div className="absolute -inset-1 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-500" />
-                                <div className="relative bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-2xl p-8 text-black font-semibold text-center shadow-2xl">
-                                    <p className="text-6xl mb-4 animate-bounce">🚀</p>
-                                    <p className="text-lg">Building the future of work, one transaction at a time.</p>
+
+                        <div className="grid grid-cols-2 gap-6">
+                            {[
+                                { value: "9+", label: "Years Experience", color: colors.purple },
+                                { value: "500+", label: "Developers Trained", color: colors.cyan },
+                                { value: "50+", label: "Projects Completed", color: colors.green },
+                                { value: "5K+", label: "Community Members", color: colors.purple },
+                            ].map((stat) => (
+                                <div key={stat.label} className="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md text-center hover:border-white/20 transition-all">
+                                    <div className="text-5xl font-bold mb-2" style={{ color: stat.color }}>{stat.value}</div>
+                                    <p className="text-gray-400 text-sm">{stat.label}</p>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Values Section */}
-            <section className="relative z-10 py-20 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-12 text-center text-white animate-fade-in">Our Values</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm hover:border-[#DC1FFF]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#DC1FFF]/20 relative overflow-hidden animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                            <div className="absolute inset-0 bg-linear-to-br from-[#DC1FFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative z-10">
-                                <div className="w-16 h-16 bg-linear-to-br from-[#DC1FFF] to-[#00FFA3] rounded-xl flex items-center justify-center mb-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#DC1FFF]/50">
-                                    <Heart className="w-8 h-8 text-black" />
-                                </div>
-                                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#DC1FFF] transition-colors duration-300">User-First</h3>
-                                <p className="text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
-                                    Every feature is designed with you in mind. Simple, intuitive, powerful.
-                                </p>
+            {/* DappPay Mission */}
+            <section className="py-20 px-6">
+                <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                    <div className="order-2 md:order-1 space-y-8">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${colors.purple}, ${colors.green})` }}>
+                                <Target className="w-7 h-7 text-black" />
                             </div>
+                            <h2 className="text-4xl font-bold">DappPay Mission</h2>
                         </div>
 
-                        <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#03E1FF]/20 rounded-2xl backdrop-blur-sm hover:border-[#03E1FF]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#03E1FF]/20 relative overflow-hidden animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="absolute inset-0 bg-linear-to-br from-[#03E1FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative z-10">
-                                <div className="w-16 h-16 bg-linear-to-br from-[#03E1FF] to-[#00FFA3] rounded-xl flex items-center justify-center mb-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#03E1FF]/50">
-                                    <Shield className="w-8 h-8 text-black" />
-                                </div>
-                                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#03E1FF] transition-colors duration-300">Security First</h3>
-                                <p className="text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
-                                    Your funds are protected by blockchain technology and cryptographic security.
-                                </p>
-                            </div>
-                        </div>
+                        <p className="text-lg text-gray-400 leading-relaxed">
+                            DappPay transforms payroll management by combining Solana&apos;s speed with AI-powered natural language processing. Chat with your AI assistant to manage payroll — no complex dashboards required.
+                        </p>
 
-                        <div className="group p-8 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#00FFA3]/20 rounded-2xl backdrop-blur-sm hover:border-[#00FFA3]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#00FFA3]/20 relative overflow-hidden animate-slide-up" style={{ animationDelay: '0.3s' }}>
-                            <div className="absolute inset-0 bg-linear-to-br from-[#00FFA3]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative z-10">
-                                <div className="w-16 h-16 bg-linear-to-br from-[#00FFA3] to-[#03E1FF] rounded-xl flex items-center justify-center mb-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg shadow-[#00FFA3]/50">
-                                    <Award className="w-8 h-8 text-black" />
+                        <div className="space-y-5">
+                            {[
+                                { icon: Zap, text: "Instant payouts in seconds", color: colors.green },
+                                { icon: Sparkles, text: "AI-driven natural language automation", color: colors.purple },
+                                { icon: Shield, text: "Blockchain-secured transparency", color: colors.cyan },
+                            ].map((item) => (
+                                <div key={item.text} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
+                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: item.color + "20" }}>
+                                        <item.icon className="w-6 h-6" style={{ color: item.color }} />
+                                    </div>
+                                    <span className="text-gray-300">{item.text}</span>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00FFA3] transition-colors duration-300">Innovation</h3>
-                                <p className="text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
-                                    We constantly push boundaries to deliver cutting-edge solutions.
-                                </p>
-                            </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="order-1 md:order-2 flex justify-center">
+                        <div className="p-10 rounded-3xl text-center text-black font-bold text-2xl" style={{ background: `linear-gradient(135deg, ${colors.purple}, ${colors.cyan}, ${colors.green})` }}>
+                            🚀 DappPay<br />Revolutionizing Payroll<br />on Solana
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Team Section */}
-            <section className="relative z-10 py-20 px-6 bg-slate-900/30 backdrop-blur-sm">
+            {/* Offerings */}
+            <section className="py-20 px-6 bg-linear-to-b from-black to-zinc-950">
                 <div className="max-w-7xl mx-auto">
-                    <h2 className="text-3xl font-bold mb-12 text-center text-white animate-fade-in">Meet Our Team</h2>
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <h2 className="text-4xl font-bold text-center mb-16">My Comprehensive Offerings</h2>
+                    <div className="grid md:grid-cols-4 gap-8">
                         {[
-                            { name: 'Alice Johnson', role: 'Founder & CEO', icon: Users, color: 'from-[#DC1FFF] to-[#00FFA3]', desc: 'Visionary leader with 10+ years in blockchain and fintech.', delay: '0.1s' },
-                            { name: 'Bob Smith', role: 'CTO', icon: Zap, color: 'from-[#03E1FF] to-[#00FFA3]', desc: 'Solana expert driving our high-performance architecture.', delay: '0.2s' },
-                            { name: 'Carol Lee', role: 'Head of AI', icon: Sparkles, color: 'from-[#00FFA3] to-[#DC1FFF]', desc: 'AI pioneer integrating natural language into payroll.', delay: '0.3s' }
-                        ].map((member, index) => (
-                            <div key={index} className="group text-center p-6 bg-linear-to-br from-slate-900/50 to-slate-800/30 border border-[#DC1FFF]/20 rounded-2xl backdrop-blur-sm hover:border-[#DC1FFF]/60 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-[#DC1FFF]/20 animate-slide-up" style={{ animationDelay: member.delay }}>
-                                <div className="relative inline-block mb-4">
-                                    <div className={`w-20 h-20 bg-linear-to-br ${member.color} rounded-full mx-auto flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                                        <member.icon className="w-10 h-10 text-black" />
-                                    </div>
-                                    <div className="absolute inset-0 w-20 h-20 mx-auto bg-linear-to-br ${member.color} rounded-full blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
+                            { icon: BookOpen, title: "Education", color: colors.purple },
+                            { icon: Users, title: "Mentorship", color: colors.cyan },
+                            { icon: Code2, title: "Development", color: colors.green },
+                            { icon: TrendingUp, title: "Innovation", color: colors.purple },
+                        ].map((item) => (
+                            <div key={item.title} className="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-white/20 transition-all group">
+                                <div className="w-14 h-14 rounded-xl mb-6 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${item.color}, ${colors.green})` }}>
+                                    <item.icon className="w-7 h-7 text-black" />
                                 </div>
-                                <h3 className="text-xl font-bold mb-2 text-white group-hover:text-[#00FFA3] transition-colors duration-300">{member.name}</h3>
-                                <p className="text-[#DC1FFF] mb-4 font-medium">{member.role}</p>
-                                <p className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">{member.desc}</p>
+                                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                                <p className="text-sm text-gray-400">
+                                    {item.title === "Education" && "Premium courses & resources on Web3 & AI"}
+                                    {item.title === "Mentorship" && "One-on-one guidance from experts"}
+                                    {item.title === "Development" && "Smart contracts & full-stack dApps"}
+                                    {item.title === "Innovation" && "Cutting-edge Web3 & AI solutions"}
+                                </p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            <Footer />
+            {/* Core Values */}
+            <section className="py-20 px-6">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-4xl font-bold text-center mb-16">My Core Values</h2>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            { icon: Heart, title: "User-First", color: colors.purple },
+                            { icon: Shield, title: "Security & Transparency", color: colors.cyan },
+                            { icon: Award, title: "Continuous Innovation", color: colors.green },
+                        ].map((value) => (
+                            <div key={value.title} className="p-10 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-white/20 transition-all group text-center">
+                                <div className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${value.color}, ${colors.cyan})` }}>
+                                    <value.icon className="w-10 h-10 text-black" />
+                                </div>
+                                <h3 className="text-2xl font-bold mb-4" style={{ color: value.color }}>{value.title}</h3>
+                                <p className="text-gray-400">
+                                    {value.title === "User-First" && "Every feature designed with simplicity and accessibility in mind."}
+                                    {value.title === "Security & Transparency" && "Built on blockchain with cryptographic security and full transparency."}
+                                    {value.title === "Continuous Innovation" && "Pushing boundaries to advance Web3 and AI adoption."}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-            <style jsx>{`
-                @keyframes gradient {
-                    0%, 100% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                }
-                .animate-gradient {
-                    animation: gradient 3s ease infinite;
-                }
-                @keyframes fade-in {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fade-in {
-                    animation: fade-in 0.8s ease-out forwards;
-                }
-                @keyframes slide-up {
-                    from { opacity: 0; transform: translateY(30px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-slide-up {
-                    animation: slide-up 0.8s ease-out forwards;
-                }
-                @keyframes slide-left {
-                    from { opacity: 0; transform: translateX(-30px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                .animate-slide-left {
-                    animation: slide-left 0.8s ease-out forwards;
-                }
-                @keyframes slide-right {
-                    from { opacity: 0; transform: translateX(30px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                .animate-slide-right {
-                    animation: slide-right 0.8s ease-out forwards;
-                }
-            `}</style>
+            {/* CTA */}
+            <section className="py-20 px-6 bg-linear-to-b from-black to-zinc-950">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Join the Web3 Revolution?</h2>
+                    <p className="text-xl text-gray-400 mb-10">
+                        Whether you want to revolutionize payroll with DappPay or level up with DappMentors — I&apos;m here to help.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                        <button className="px-10 py-4 rounded-xl font-bold text-black transition-all hover:scale-105" style={{ background: `linear-gradient(to right, ${colors.purple}, ${colors.cyan}, ${colors.green})` }}>
+                            Start with DappPay
+                        </button>
+                        <button className="px-10 py-4 rounded-xl font-bold border-2 transition-all hover:scale-105" style={{ borderColor: colors.cyan, color: colors.cyan }}>
+                            Learn with DappMentors
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <Footer />
         </div>
     );
 }

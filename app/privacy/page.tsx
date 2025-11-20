@@ -17,7 +17,7 @@ export default function PrivacyPage() {
                     <p className="leading-relaxed">
                         DappPay is built from the ground up with privacy as a non-negotiable feature — not an afterthought.
                     </p>
-                    <p className="text-lg font-medium bg-gradient-to-r from-[#DC1FFF] to-[#00FFA3] bg-clip-text text-transparent">
+                    <p className="text-lg font-medium bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] bg-clip-text text-transparent">
                         We do not store your OpenAI API key. Ever.
                     </p>
                     <p className="leading-relaxed">

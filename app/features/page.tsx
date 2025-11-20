@@ -4,8 +4,10 @@ import { Sparkles, Shield, Zap, Brain, Key, Clock, Lock, Bolt, MessageCircle, Da
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ParticleBackground from '@/components/ParticleBackground';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+    const router = useRouter();
     const features = [
         {
             icon: Brain,
@@ -172,7 +174,7 @@ export default function Page() {
                         <div className="relative bg-linear-to-br from-slate-900/90 to-slate-800/90 rounded-2xl p-8 sm:p-12 border border-[#DC1FFF]/20 backdrop-blur-sm">
                             <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-white">Ready to Transform Your Payroll?</h2>
                             <p className="text-slate-400 mb-8 text-lg">Join thousands of businesses already using DappPay</p>
-                            <button className="group/btn relative px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 overflow-hidden">
+                            <button onClick={() => router.push('/dashboard')} className="group/btn relative px-8 py-4 bg-linear-to-r from-[#DC1FFF] to-[#00FFA3] rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 overflow-hidden cursor-pointer">
                                 <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover/btn:translate-x-[200%] transition-transform duration-1000" />
                                 <span className="relative flex items-center justify-center gap-2 text-black">
                                     Get Started Now
