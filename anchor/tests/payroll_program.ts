@@ -2,7 +2,7 @@
 
 import * as anchor from '@coral-xyz/anchor'
 import { Program, BN } from '@coral-xyz/anchor'
-import { PayrollProgram } from '../target/types/payroll_program'
+import { PayrollProgram } from '../../lib/payroll_program'
 import { PublicKey, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js'
 import { assert } from 'chai'
 
