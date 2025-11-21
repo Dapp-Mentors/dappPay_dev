@@ -1,6 +1,6 @@
 // Blockchain Interface file for Payroll DApp - FIXED VERSION
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import type { PayrollProgram } from '../anchor/target/types/payroll_program'
+import type { PayrollProgram } from '@/lib/payroll_program'
 import {
     Connection,
     PublicKey,
@@ -9,7 +9,7 @@ import {
     Transaction,
     AccountMeta,
 } from '@solana/web3.js'
-import idlJson from '../anchor/target/idl/payroll_program.json'
+import idlJson from '@/lib/payroll_program.json'
 import { Organization, Worker } from '@/utils/interface'
 import { getClusterURL } from '@/utils/helper'
 
