@@ -2,7 +2,8 @@
   "license": "ISC",
   "scripts": {
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
-    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
+    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
+    "build": "anchor build && mkdir -p ../lib && cp target/idl/payroll_program.json ../lib/payroll_program.json && cp target/types/payroll_program.ts ../lib/payroll_program.ts 2>/dev/null || true"
   },
   "dependencies": {
     "@coral-xyz/anchor": "0.32.1"

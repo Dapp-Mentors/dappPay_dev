@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "test": "anchor test",
-    "build": "bash copy-idl.sh && next build",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "prepare-idl": "./copy-idl.sh"
+    "lint": "eslint"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.66",
