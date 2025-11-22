@@ -1,6 +1,7 @@
 // Blockchain Interface file for Payroll DApp - FIXED VERSION
 import { AnchorProvider, BN, Program, Wallet } from '@coral-xyz/anchor'
-import type { PayrollProgram } from '@/lib/payroll_program'
+import type { PayrollProgram } from '@/anchor/target/types/payroll_program'
+import idlJson from '@/anchor/target/idl/payroll_program.json'
 import {
     Connection,
     PublicKey,
@@ -9,7 +10,6 @@ import {
     Transaction,
     AccountMeta,
 } from '@solana/web3.js'
-import idlJson from '@/lib/payroll_program.json'
 import { Organization, Worker } from '@/utils/interface'
 import { getClusterURL } from '@/utils/helper'
 
@@ -467,7 +467,7 @@ const serializeOrganizations = (organizations: { publicKey: PublicKey; account: 
         createdAt: Number(org.account.createdAt || 0),
         bump: org.account.bump,
     }))
-    .sort((a, b) => b.createdAt - a.createdAt)
+        .sort((a, b) => b.createdAt - a.createdAt)
 }
 
 /**
@@ -483,5 +483,5 @@ const serializeWorkers = (workers: { publicKey: PublicKey; account: RawWorker }[
         createdAt: Number(w.account.createdAt || 0),
         bump: w.account.bump,
     }))
-    .sort((a, b) => b.createdAt - a.createdAt)
+        .sort((a, b) => b.createdAt - a.createdAt)
 }

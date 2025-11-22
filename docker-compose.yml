@@ -1,0 +1,21 @@
+# docker-compose.yml (unchanged, still perfect)
+version: '3.8'
+
+services:
+  dapppay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dapppay
+    restart: unless-stopped
+    ports:
+      - "3000:3000"    # or "80:3000" if you want it on port 80 directly
+    environment:
+      - NODE_ENV=production
+      # Add your runtime env vars here or via .env file
+      # Example:
+      # NEXT_PUBLIC_SOLANA_RPC=https://api.mainnet-beta.solana.com
+      # NEXT_PUBLIC_PROGRAM_ID=YourDeployedProgramIdHere
+    volumes:
+      - ./.env.production:/app/.env.production
+      - ./.env.local:/app/.env.local   # optional override
