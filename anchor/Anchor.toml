@@ -5,7 +5,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-payroll_program = "A9fnM3skS5kbECt2isFV2EGvS4D7hnsMjnqi2YBwaeed"
+payroll_program = "9S9gyDjqGdBUH8nPYpJscXrJecUgVN4SfXmuwh285hLx"
 
 [programs.localnet]
 
