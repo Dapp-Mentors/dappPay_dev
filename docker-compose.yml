@@ -1,4 +1,3 @@
-# docker-compose.yml (unchanged, still perfect)
 version: '3.8'
 
 services:
@@ -6,16 +5,36 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: dapppay
-    restart: unless-stopped
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+      shm_size: '2gb'
+    container_name: dapppay_app
     ports:
-      - "3000:3000"    # or "80:3000" if you want it on port 80 directly
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-      # Add your runtime env vars here or via .env file
-      # Example:
-      # NEXT_PUBLIC_SOLANA_RPC=https://api.mainnet-beta.solana.com
-      # NEXT_PUBLIC_PROGRAM_ID=YourDeployedProgramIdHere
+      - PORT=3000
+      - NEXT_TELEMETRY_DISABLED=1
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2'
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    networks:
+      - dapppay_network
     volumes:
-      - ./.env.production:/app/.env.production
-      - ./.env.local:/app/.env.local   # optional override
+      # Optional: persist logs
+      - ./logs:/app/logs
+
+networks:
+  dapppay_network:
+    driver: bridge
