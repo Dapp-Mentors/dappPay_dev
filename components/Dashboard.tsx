@@ -9,6 +9,7 @@ import { Menu } from 'lucide-react';
 import { Message, PayrollSummary, WorkerSummary } from '@/utils/interface';
 import { blockchainMcpTools, setWalletContext } from '@/lib/payroll-mcp-tools';
 import Footer from './Footer';
+import { getCluster } from '@/utils/helper';
 
 type ChatMessage = Message & {
   id: string;
@@ -270,6 +271,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { publicKey, signTransaction } = useWallet();
 
+  const CLUSTER: string = process.env.NEXT_PUBLIC_CLUSTER || 'devnet'
+
   // Initialize messages with API key requirement check
   useEffect(() => {
     const hasEnvKey = !!process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -405,7 +408,26 @@ const Dashboard = () => {
         5. Be conversational and friendly in your responses
         6. After tools execute, provide a brief, natural summary - the tool results are already formatted nicely
 
-        Available tools: ${Object.keys(blockchainMcpTools).join(', ')}`,
+        Available tools: ${Object.keys(blockchainMcpTools).join(', ')}
+
+        SOLANA EXPLORER LINKS:
+          When displaying transaction signatures or addresses, ALWAYS provide clickable Solana Explorer links based on the current cluster:
+          - Transaction format: https://explorer.solana.com/tx/[SIGNATURE]?cluster=[CLUSTER]
+          - Address format: https://explorer.solana.com/address/[ADDRESS]?cluster=[CLUSTER]
+
+          IMPORTANT: Replace [CLUSTER] with the actual cluster value. Always include cluster parameter in links.
+          Supported clusters: custom, devnet, testnet, mainnet-beta
+
+          Current cluster: ${getCluster(CLUSTER)}
+          Supported clusters: custom, devnet, testnet, mainnet-beta
+
+          Example in response:
+          "Transaction: [View on Explorer](https://explorer.solana.com/tx/abc123?cluster=custom)"
+          "Organization Address: [ADDRESS](https://explorer.solana.com/address/xyz789?cluster=custom)"
+
+          IMPORTANT: Replace [CLUSTER] with the actual cluster value. Always include cluster parameter in links.
+          Supported clusters: custom, devnet, testnet, mainnet-beta
+        `,
       };
 
       const conversationMessages: OpenAIMessage[] = [
