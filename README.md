@@ -7,14 +7,13 @@ DappPay lets anyone create organizations, add workers, fund treasuries, and proc
 
 Live demo → https://dapppay.app (or your deployed URL)
 
-https://user-images.githubusercontent.com/25317499/1234567890-placeholder-screenshot-dashboard-light.png
-*(Light mode screenshot – replace with your own)*
+![DappPay Dashboard](./screenshots/dapp_pay_compressed.png)
 
 ## Why DappPay is Different
 
 | Feature                        | Traditional Payroll | Most Crypto Payroll | DappPay                              |
 |-------------------------------|---------------------|---------------------|--------------------------------------|
-| Natural language control      | ❌                  | ❌                  | ✅ Just type “Pay everyone at Tesla” |
+| Natural language control      | ❌                  | ❌                  | ✅ Just type "Pay everyone at Tesla" |
 | OpenAI key stored on servers  | ✅ (most tools)     | ✅ (most tools)     | ❌ Never leaves your browser        |
 | On-chain & auditable          | ❌                  | ✅                  | ✅ Everything on Solana              |
 | Wallet stays non-custodial    | ❌                  | Sometimes           | ✅ You always sign transactions     |
@@ -45,7 +44,7 @@ Fund Tesla with 50 SOL
 Process payroll for Tesla
 ```
 
-That’s it. The AI remembers context and executes everything on-chain.
+That's it. The AI remembers context and executes everything on-chain.
 
 ## Example Commands (just copy-paste)
 
